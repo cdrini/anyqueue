@@ -38,7 +38,9 @@ export class YouTubeProvider extends SongProvider {
   async augmentMetadata(song) {
     try {
       song.oembed = await this.fetchOembed(song.link);
-    } catch (err) {}
+    } catch (err) {
+      console.log("YT OEMBED FAILED", err);
+    }
 
     if (song.oembed) {
       song.title = song.oembed.title;
