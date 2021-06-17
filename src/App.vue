@@ -174,6 +174,12 @@ class RedditSongExtractor {
    * @param {string} url
    */
   async extract(url, { htmlSongExtractor = this.htmlExtractor } = {}) {
+    if (url.startsWith("/r/")) {
+      // The link is mis-behaving on Reddit's mobile webapp :/ It's removing
+      // the domain for some ungodly reason.
+      url = "https://www.reddit.com" + url;
+    }
+
     // Assume a URL like:
     // https://www.reddit.com/r/Songwriting/comments/ns5muz/.json
 
