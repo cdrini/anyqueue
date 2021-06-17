@@ -36,9 +36,14 @@ export class YouTubeProvider extends SongProvider {
   }
 
   async augmentMetadata(song) {
-    song.oembed = await this.fetchOembed(song.link);
-    song.title = song.oembed.title;
-    song.artist = song.oembed.author_name;
-    song.thumbnail_url = song.oembed.thumbnail_url;
+    try {
+      song.oembed = await this.fetchOembed(song.link);
+    } catch (err) {}
+
+    if (song.oembed) {
+      song.title = song.oembed.title;
+      song.artist = song.oembed.author_name;
+      song.thumbnail_url = song.oembed.thumbnail_url;
+    }
   }
 }

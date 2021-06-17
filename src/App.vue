@@ -146,10 +146,16 @@ class RedditSongExtractor {
   }
 
   extractListingHtml(listing, recur = false) {
-    let html = listing.data.body_html
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/\\";/g, '"');
+    let html = "";
+    if (listing.data.body_html) {
+      html += listing.data.body_html
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/\\";/g, '"');
+    }
+    if (listing.data.url) {
+      html += `\n<a href="${listing.data.url}">${listing.data.title}</a>`;
+    }
     if (
       recur &&
       listing.data.replies &&
@@ -172,7 +178,12 @@ class RedditSongExtractor {
     // https://www.reddit.com/r/Songwriting/comments/ns5muz/.json
 
     const doc = await fetch(url).then((r) => r.json());
-    const toProcess = doc[1].data.children;
+    const toProcess =
+      // eg https://www.reddit.com/r/Songwriting/comments/ns5muz/.json
+      doc.length
+        ? doc[1].data.children
+        : // eg https://www.reddit.com/r/Songwriting/.json
+          doc.data.children;
 
     const songs = flatMap(toProcess, (listing) => {
       // I've planted confederate comments inside the Songwriting
@@ -187,7 +198,10 @@ class RedditSongExtractor {
         s.title = s.title.trim();
       });
 
-      if (listing.data.body_html.includes("soundcloud.app")) {
+      if (
+        listing.data.body_html &&
+        listing.data.body_html.includes("soundcloud.app")
+      ) {
         if (songs.find((s) => s.link.includes("soundcloud.com"))) {
           songs = songs.filter((s) => !s.link.includes("soundcloud.app"));
         }
