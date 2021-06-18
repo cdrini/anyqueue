@@ -180,6 +180,16 @@ class RedditSongExtractor {
       url = "https://www.reddit.com" + url;
     }
 
+    // Set default for the r/SongWriting post 😅
+    const urlObj = new URL(url);
+    if (!urlObj.searchParams.has("limit")) {
+      urlObj.searchParams.set("limit", 500);
+    }
+    if (!urlObj.searchParams.has("depth")) {
+      urlObj.searchParams.set("depth", 2);
+    }
+    url = urlObj.toString();
+
     // Assume a URL like:
     // https://www.reddit.com/r/Songwriting/comments/ns5muz/.json
 
