@@ -2,9 +2,14 @@
   <div class="song-tile">
     <div class="song-tile__thumb" v-b-popover.hover.v-warning="warningsHover">
       <img v-if="song.thumbnail_url" :src="song.thumbnail_url" />
+      <b-icon-x-square
+        class="song-tile__unavailable"
+        v-if="song.unavailable"
+        @click.stop
+      />
       <b-icon-exclamation-square
         class="song-tile__warning"
-        v-if="song.warnings && song.warnings.length"
+        v-else-if="song.warnings && song.warnings.length"
         @click.stop
       />
     </div>
@@ -26,9 +31,9 @@
 </template>
 
 <script>
-import { BIconExclamationSquare } from "bootstrap-vue";
+import { BIconExclamationSquare, BIconXSquare } from "bootstrap-vue";
 export default {
-  components: { BIconExclamationSquare },
+  components: { BIconExclamationSquare, BIconXSquare },
   props: {
     song: Object,
   },
@@ -36,6 +41,10 @@ export default {
   computed: {
     warningsHover() {
       if (!this.song) return "";
+
+      if (this.song.unavailable) {
+        return `Unable to find song; perhaps it was deleted from ${this.song.provider.name}?`;
+      }
       if (this.song.warnings && this.song.warnings.length) {
         return `${
           this.song.provider.name
@@ -69,7 +78,8 @@ export default {
   margin-left: 0;
 }
 
-.song-tile__thumb > .song-tile__warning {
+.song-tile__thumb > .song-tile__warning,
+.song-tile__thumb > .song-tile__unavailable {
   align-self: center;
   color: #c1572e;
 }

@@ -32,14 +32,14 @@ export class YouTubeProvider extends SongProvider {
         url,
         format: "json"
       })}`
-    ).then((r) => r.json());
+    ).then((r) => (r.status === 404 ? 404 : r.json()));
   }
 
   async augmentMetadata(song) {
-    try {
-      song.oembed = await this.fetchOembed(song.link);
-    } catch (err) {
-      console.log("YT OEMBED FAILED", err);
+    song.oembed = await this.fetchOembed(song.link);
+    if (song.oembed === 404) {
+      song.unavailable = true;
+      return;
     }
 
     if (song.oembed) {

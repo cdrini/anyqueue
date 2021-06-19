@@ -35,11 +35,15 @@ export class SoundCloudProvider extends SongProvider {
         url,
         format: "json"
       })}`
-    ).then((r) => r.json());
+    ).then((r) => (r.status === 404 ? 404 : r.json()));
   }
 
   async augmentMetadata(song) {
     song.oembed = await this.fetchOembed(song.link);
+    if (song.oembed === 404) {
+      song.unavailable = true;
+      return;
+    }
     const titleM = song.oembed.title.match(/^(.*) by (.*)$/);
     song.title = titleM[1];
     song.artist = titleM[2];

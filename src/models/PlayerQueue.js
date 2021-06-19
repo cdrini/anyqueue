@@ -10,7 +10,15 @@ export class PlayerQueue {
   }
 
   get nextSong() {
-    return this.songs[this.activeSongIndex + 1];
+    return this.songs[this.findNextSongIndex()];
+  }
+
+  findNextSongIndex(startIndex = this.activeSongIndex) {
+    for (let i = startIndex; i < this.songs.length; i++) {
+      if (!this.songs[i].unavailable) {
+        return i;
+      }
+    }
   }
 
   load(songs, activeSongIndex = 0) {
@@ -32,7 +40,7 @@ export class PlayerQueue {
       delete this.activeSong.active;
     }
 
-    this.activeSongIndex++;
+    this.activeSongIndex = this.findNextSongIndex();
     this.activeSong.active = true;
   }
 
@@ -40,7 +48,7 @@ export class PlayerQueue {
     if (this.activeSong) {
       delete this.activeSong.active;
     }
-    this.activeSongIndex = index;
+    this.activeSongIndex = this.findNextSongIndex(index);
     this.activeSong.active = true;
     if (!this.started) this.start();
   }

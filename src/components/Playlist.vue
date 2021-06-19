@@ -5,7 +5,7 @@
         class="song-wrapper"
         v-for="(song, songIndex) in songs"
         :key="song.link"
-        :class="{ active: song.active }"
+        :class="{ active: song.active, unavailable: song.unavailable }"
       >
         <div class="song-listing" @click="$emit('song-clicked', songIndex)">
           <SongTile :song="song" style="flex: 1" />
@@ -180,6 +180,16 @@ li.song-wrapper.active {
 .song-wrapper.active .song-listing__view .b-icon {
   opacity: 0;
   transform: translateY(-8px);
+}
+
+.song-wrapper.unavailable .song-tile {
+  cursor: default;
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.song-wrapper.unavailable .song-listing__play {
+  display: none;
 }
 
 .playlist__song-count {

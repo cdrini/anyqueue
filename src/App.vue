@@ -272,10 +272,17 @@ async function processSongs(songs, activeIndex) {
         }
 
         s.link = await s.provider.normalizeLink(s.link);
-        await s.provider.augmentMetadata(s);
+        try {
+          await s.provider.augmentMetadata(s);
+        } catch (err) {
+          // Assume the song is no longer available
+          s.unavailable = true;
+          s.warnings.push('An error ocurred');
+        }
       }
     })
   );
+
   if (activeIndex < songs.length) {
     songs[activeIndex].active = true;
   } else {
