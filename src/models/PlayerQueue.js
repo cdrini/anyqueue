@@ -13,7 +13,7 @@ export class PlayerQueue {
     return this.songs[this.findNextSongIndex()];
   }
 
-  findNextSongIndex(startIndex = this.activeSongIndex) {
+  findNextSongIndex(startIndex = this.activeSongIndex + 1) {
     for (let i = startIndex; i < this.songs.length; i++) {
       if (!this.songs[i].unavailable) {
         return i;
