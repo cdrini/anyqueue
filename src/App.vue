@@ -189,6 +189,10 @@ class RedditSongExtractor {
     if (!urlObj.searchParams.has("depth")) {
       urlObj.searchParams.set("depth", 2);
     }
+    // Add .json if not there
+    if (!urlObj.pathname.endsWith('.json')) {
+      urlObj.pathname += '.json';
+    }
     url = urlObj.toString();
 
     // Assume a URL like:
