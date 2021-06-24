@@ -39,7 +39,13 @@ export default {
 }
 
 .play-toolbar .chunky-button {
-  aspect-ratio: 1/1;
+  width: 50px;
+  height: 60px;
+  align-self: center;
+}
+
+.play-toolbar .chunky-button:hover {
+  color: #2a77d4;
 }
 
 .play-toolbar .song-tile {

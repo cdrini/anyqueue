@@ -586,10 +586,10 @@ body {
 }
 
 .play-toolbar {
-  border-top: 2px solid #AAA;
+  border-top: 2px solid rgb(42, 119, 212);
+  background: rgba(63, 138, 255, 0.22);
   position: sticky;
   bottom: 0;
-  background: white;
 }
 
 .naked-button {
@@ -628,14 +628,19 @@ body {
   margin: 0;
 }
 
+.player-shell__main {
+  background: rgba(51, 104, 161, 0.15);
+}
+
+.player-shell__sidebar {
+  background: #F4F9FD;
+}
+
 .player-placeholder {
   width: 100%;
   height: 100%;
   cursor: pointer;
-  background: url("/favicon.ico"), rgba(51, 104, 161, 0.15);
-  background-position-x: 0%, 0%;
-  background-position-y: 0%, 0%;
-  background-repeat: repeat, repeat;
+  background: url("/favicon.ico");
   background-repeat: no-repeat;
   background-position: center;
 }

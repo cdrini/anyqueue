@@ -94,5 +94,7 @@ export default {
 
 .song-tile__byline {
   font-size: 0.9em;
+  padding-top: 4px;
+  line-height: 1.1em;
 }
 </style>
