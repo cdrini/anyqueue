@@ -66,7 +66,7 @@ export default {
   width: 48px;
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
 }
 .song-tile__thumb > img {
   width: 48px;
