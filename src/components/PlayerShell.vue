@@ -22,7 +22,6 @@
 }
 
 .player-shell__main {
-  background: rgba(0, 0, 0, 0.1);
   flex: 1;
 }
 

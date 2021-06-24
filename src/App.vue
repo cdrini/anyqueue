@@ -57,6 +57,7 @@
         :autoplay="true"
         @ended="skipForward(true)"
       />
+      <div class="player-placeholder" v-else @click="playerQueue.start()" />
     </template>
   </PlayerShell>
 </template>
@@ -625,5 +626,17 @@ body {
 
 .song-player .alert {
   margin: 0;
+}
+
+.player-placeholder {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background: url("/favicon.ico"), rgba(51, 104, 161, 0.15);
+  background-position-x: 0%, 0%;
+  background-position-y: 0%, 0%;
+  background-repeat: repeat, repeat;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 </style>
