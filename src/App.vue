@@ -77,10 +77,10 @@ import { SoundCloudProvider } from "./models/SongProviders/SoundCloudProvider.js
 import { SpotifyProvider } from "./models/SongProviders/SpotifyProvider.js";
 import { GoogleDriveProvider } from "./models/SongProviders/GoogleDriveProvider.js";
 import { AudioMackProvider } from "./models/SongProviders/AudioMackProvider.js";
+import { HTMLQueueProvider } from "./models/QueueProviders/HTMLQueueProvider.js";
+import { RedditQueueProvider } from "./models/QueueProviders/RedditQueueProvider.js";
 import { csvParse } from "d3-dsv";
 import jsonUrl from "json-url";
-import uniqBy from "lodash/uniqBy";
-import flatMap from "lodash/flatMap";
 import { PlayerQueue } from "./models/PlayerQueue";
 import Vue from "vue";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
@@ -119,122 +119,8 @@ const PROVIDERS = [
   { provider: new AudioMackProvider(), player: AudioMackPlayer },
 ];
 
-class HTMLSongExtractor {
-  extract(html) {
-    return uniqBy(
-      Array.from(
-        new DOMParser().parseFromString(html, "text/html").querySelectorAll("a")
-      ).map((a) => ({
-        link: a.href,
-        artist: "",
-        title:
-          a.textContent.trim() !== a.href
-            ? a.textContent.trim()
-            : a.parentElement.textContent.replace(a.href, ""),
-      })),
-      (s) => s.link
-    );
-  }
-}
-const htmlSongExtractor = new HTMLSongExtractor();
-
-class RedditSongExtractor {
-  /**
-   * @param {HTMLSongExtractor} htmlExtractor
-   */
-  constructor(htmlExtractor) {
-    this.htmlExtractor = htmlExtractor;
-  }
-
-  extractListingHtml(listing, recur = false) {
-    let html = "";
-    if (listing.data.body_html) {
-      html += listing.data.body_html
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">")
-        .replace(/\\";/g, '"');
-    }
-    if (listing.data.url) {
-      html += `\n<a href="${listing.data.url}">${listing.data.title}</a>`;
-    }
-    if (
-      recur &&
-      listing.data.replies &&
-      listing.data.replies.kind === "Listing"
-    ) {
-      html += listing.data.replies.data.children
-        // Really long thread are excluded 😬
-        .filter((c) => c.kind !== "more")
-        .map((c) => this.extractListingHtml(c, true))
-        .join("\n");
-    }
-    return html;
-  }
-
-  /**
-   * @param {string} url
-   */
-  async extract(url, { htmlSongExtractor = this.htmlExtractor } = {}) {
-    if (url.startsWith("/r/")) {
-      // The link is mis-behaving on Reddit's mobile webapp :/ It's removing
-      // the domain for some ungodly reason.
-      url = "https://www.reddit.com" + url;
-    }
-
-    // Set default for the r/SongWriting post 😅
-    const urlObj = new URL(url);
-    if (!urlObj.searchParams.has("limit")) {
-      urlObj.searchParams.set("limit", 500);
-    }
-    if (!urlObj.searchParams.has("depth")) {
-      urlObj.searchParams.set("depth", 2);
-    }
-    // Add .json if not there
-    if (!urlObj.pathname.endsWith('.json')) {
-      urlObj.pathname += '.json';
-    }
-    url = urlObj.toString();
-
-    // Assume a URL like:
-    // https://www.reddit.com/r/Songwriting/comments/ns5muz/.json
-
-    const doc = await fetch(url).then((r) => r.json());
-    const toProcess =
-      // eg https://www.reddit.com/r/Songwriting/comments/ns5muz/.json
-      doc.length
-        ? doc[1].data.children
-        : // eg https://www.reddit.com/r/Songwriting/.json
-          doc.data.children;
-
-    const songs = flatMap(toProcess, (listing) => {
-      // I've planted confederate comments inside the Songwriting
-      // challenge with the unshortened forms of the soundcloud.app
-      // URLs, cause they're otherwise impossible to work with :(
-      const html = this.extractListingHtml(listing, true);
-      let songs = htmlSongExtractor.extract(html);
-      songs.forEach((s) => {
-        s.extra_links = s.extra_links || [];
-        s.extra_links.push(`https://www.reddit.com${listing.data.permalink}`);
-        s.artist = listing.data.author;
-        s.title = s.title.trim();
-      });
-
-      if (
-        listing.data.body_html &&
-        listing.data.body_html.includes("soundcloud.app")
-      ) {
-        if (songs.find((s) => s.link.includes("soundcloud.com"))) {
-          songs = songs.filter((s) => !s.link.includes("soundcloud.app"));
-        }
-      }
-
-      return songs;
-    });
-
-    return songs;
-  }
-}
-const redditSongExtractor = new RedditSongExtractor(htmlSongExtractor);
+const htmlQueueProvider = new HTMLQueueProvider();
+const redditQueueProvider = new RedditQueueProvider();
 
 const SONGS = [
   {
@@ -487,9 +373,9 @@ export default {
     async loadFreeText() {
       const songs =
         this.inputFormat === "url"
-          ? await redditSongExtractor.extract(this.inputUrl)
+          ? await redditQueueProvider.extract(this.inputUrl)
           : this.inputFormat === "html"
-          ? htmlSongExtractor.extract(this.freeText)
+          ? htmlQueueProvider.extract(this.freeText)
           : this.inputFormat === "text"
           ? this.freeText
               .trim()
