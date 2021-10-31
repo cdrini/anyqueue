@@ -40,7 +40,8 @@ export default {
 
 .play-toolbar .chunky-button {
   width: 50px;
-  height: 60px;
+  height: 100%;
+  max-height: 60px;
   align-self: center;
 }
 
@@ -50,6 +51,6 @@ export default {
 
 .play-toolbar .song-tile {
   flex: 1;
-  padding: 8px;
+  padding: 0 8px;
 }
 </style>

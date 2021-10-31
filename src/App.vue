@@ -48,6 +48,12 @@
     </template>
     <template v-slot:main>
       <component
+        v-if="queueProviderComponent"
+        class="queue-provider-song-info"
+        :is="queueProviderComponent"
+        :url="playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com'))"
+      />
+      <component
         v-if="playerQueue.started && playerQueue.activeSong"
         :is="playerQueue.activeSong.player"
         ref="activeSongPlayer"
@@ -77,8 +83,12 @@ import { SoundCloudProvider } from "./models/SongProviders/SoundCloudProvider.js
 import { SpotifyProvider } from "./models/SongProviders/SpotifyProvider.js";
 import { GoogleDriveProvider } from "./models/SongProviders/GoogleDriveProvider.js";
 import { AudioMackProvider } from "./models/SongProviders/AudioMackProvider.js";
+
+// Queue Providers
 import { HTMLQueueProvider, extractSongsFromHtml } from "./models/QueueProviders/HTMLQueueProvider.js";
 import { RedditQueueProvider } from "./models/QueueProviders/RedditQueueProvider.js";
+import ReddigtSongInfo from './components/QueueProviderSongInfo/RedditSongInfo.vue';
+
 import { csvParse } from "d3-dsv";
 import jsonUrl from "json-url";
 import { PlayerQueue } from "./models/PlayerQueue";
@@ -120,8 +130,8 @@ const PROVIDERS = [
 ];
 
 const QUEUE_PROVIDERS = [
-  new RedditQueueProvider(),
-  new HTMLQueueProvider(),
+  { provider: new RedditQueueProvider(), songInfo: ReddigtSongInfo },
+  { provider: new HTMLQueueProvider() },
 ];
 
 const SONGS = [
@@ -194,6 +204,7 @@ export default {
     return {
       /** @type {'html' | 'text' | 'csv' | 'url'} */
       inputFormat: "html",
+      queueProviderComponent: null,
       inputUrl: "",
       csvLink:
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmmpv0faY2yRLDcmGb1kHobGwfdOazcpNcL1u9649-AZfiHqeeTDji0bElgvFFMa-tl7h1-kBpngwv/pub?gid=0&single=true&output=csv",
@@ -373,20 +384,27 @@ export default {
     },
 
     async loadFreeText() {
-      const songs =
-        this.inputFormat === "url" ?
-          await QUEUE_PROVIDERS.find(p => p.testUrl(this.inputUrl)).extract(this.inputUrl)
-          : this.inputFormat === "html"
-          ? extractSongsFromHtml(this.freeText)
-          : this.inputFormat === "text"
-          ? this.freeText
-              .trim()
-              .split("\n")
-              .map((l) => l.trim())
-              .map((link) => ({ title: "", artist: "", link }))
-          : this.inputFormat === "csv"
-          ? csvParse("title,artist,link\n" + this.freeText)
-          : [];
+      let songs = [];
+      this.queueProviderComponent = null;
+      if (this.inputFormat == "url") {
+        const {provider, songInfo = null} = QUEUE_PROVIDERS.find(({provider}) => provider.testUrl(this.inputUrl));
+        this.queueProviderComponent = songInfo;
+        songs = await provider.extract(this.inputUrl);
+      }
+      else if (this.inputFormat === "html") {
+        songs = extractSongsFromHtml(this.freeText);
+      }
+      else if (this.inputFormat === "text") {
+        songs = this.freeText
+          .trim()
+          .split("\n")
+          .map((l) => l.trim())
+          .map((link) => ({ title: "", artist: "", link }));
+      }
+      else if (this.inputFormat === "csv") {
+        songs = csvParse("title,artist,link\n" + this.freeText)
+      }
+
       console.log(this.inputFormat, songs);
       await processSongs(songs, 0);
       this.songs = songs.filter((s) => s.provider);
@@ -480,8 +498,6 @@ body {
 .play-toolbar {
   border-top: 2px solid rgb(42, 119, 212);
   background: rgba(63, 138, 255, 0.22);
-  position: sticky;
-  bottom: 0;
 }
 
 .naked-button {
@@ -522,10 +538,17 @@ body {
 
 .player-shell__main {
   background: rgba(51, 104, 161, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.player-shell__main .queue-provider-song-info {
+  height: 33%;
 }
 
 .player-shell__sidebar {
   background: #F4F9FD;
+  min-height: 0;
 }
 
 .player-placeholder {
