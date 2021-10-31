@@ -77,7 +77,7 @@ import { SoundCloudProvider } from "./models/SongProviders/SoundCloudProvider.js
 import { SpotifyProvider } from "./models/SongProviders/SpotifyProvider.js";
 import { GoogleDriveProvider } from "./models/SongProviders/GoogleDriveProvider.js";
 import { AudioMackProvider } from "./models/SongProviders/AudioMackProvider.js";
-import { HTMLQueueProvider } from "./models/QueueProviders/HTMLQueueProvider.js";
+import { HTMLQueueProvider, extractSongsFromHtml } from "./models/QueueProviders/HTMLQueueProvider.js";
 import { RedditQueueProvider } from "./models/QueueProviders/RedditQueueProvider.js";
 import { csvParse } from "d3-dsv";
 import jsonUrl from "json-url";
@@ -119,8 +119,10 @@ const PROVIDERS = [
   { provider: new AudioMackProvider(), player: AudioMackPlayer },
 ];
 
-const htmlQueueProvider = new HTMLQueueProvider();
-const redditQueueProvider = new RedditQueueProvider();
+const QUEUE_PROVIDERS = [
+  new RedditQueueProvider(),
+  new HTMLQueueProvider(),
+];
 
 const SONGS = [
   {
@@ -372,10 +374,10 @@ export default {
 
     async loadFreeText() {
       const songs =
-        this.inputFormat === "url"
-          ? await redditQueueProvider.extract(this.inputUrl)
+        this.inputFormat === "url" ?
+          await QUEUE_PROVIDERS.find(p => p.testUrl(this.inputUrl)).extract(this.inputUrl)
           : this.inputFormat === "html"
-          ? htmlQueueProvider.extract(this.freeText)
+          ? extractSongsFromHtml(this.freeText)
           : this.inputFormat === "text"
           ? this.freeText
               .trim()

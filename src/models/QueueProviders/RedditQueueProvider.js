@@ -1,10 +1,14 @@
 // @ts-check
 import flatMap from "lodash/flatMap";
-import { HTMLQueueProvider } from "./HTMLQueueProvider.js";
+import { extractSongsFromHtml } from "./HTMLQueueProvider.js";
 
 export class RedditQueueProvider {
-  constructor() {
-    this.htmlQueueProvider = new HTMLQueueProvider();
+  /**
+   * 
+   * @param {string} url 
+   */
+  testUrl(url) {
+    return url.startsWith('/r/') || url.startsWith('r/') || url.includes('reddit.');
   }
 
   extractListingHtml(listing, recur = false) {
@@ -35,7 +39,7 @@ export class RedditQueueProvider {
   /**
    * @param {string} url
    */
-  async extract(url, { htmlQueueProvider = this.htmlQueueProvider } = {}) {
+  async extract(url, { htmlExtractor = extractSongsFromHtml } = {}) {
     if (url.startsWith("/r/")) {
       // The link is mis-behaving on Reddit's mobile webapp :/ It's removing
       // the domain for some ungodly reason.
@@ -72,7 +76,7 @@ export class RedditQueueProvider {
       // challenge with the unshortened forms of the soundcloud.app
       // URLs, cause they're otherwise impossible to work with :(
       const html = this.extractListingHtml(listing, true);
-      let songs = htmlQueueProvider.extract(html);
+      let songs = htmlExtractor(html);
       songs.forEach((s) => {
         s.extra_links = s.extra_links || [];
         s.extra_links.push(`https://www.reddit.com${listing.data.permalink}`);
