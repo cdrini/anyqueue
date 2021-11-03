@@ -11,6 +11,9 @@ export class RedditQueueProvider {
     return url.startsWith('/r/') || url.startsWith('r/') || url.includes('reddit.');
   }
 
+  /**
+   * @param {RedditComment | RedditPost} listing
+   */
   extractListingHtml(listing, recur = false) {
     let html = "";
     if (listing.data.body_html) {
@@ -63,38 +66,100 @@ export class RedditQueueProvider {
     // Assume a URL like:
     // https://www.reddit.com/r/Songwriting/comments/ns5muz/.json
 
+    /** @type {RedditListing<RedditPost> | [RedditListing<RedditPost>, RedditListing<RedditComment>]} */
     const doc = await fetch(url).then((r) => r.json());
     const toProcess =
       // eg https://www.reddit.com/r/Songwriting/comments/ns5muz/.json
-      doc.length
+      doc instanceof Array
         ? doc[1].data.children
         : // eg https://www.reddit.com/r/Songwriting/.json
           doc.data.children;
 
-    const songs = flatMap(toProcess, (listing) => {
-      // I've planted confederate comments inside the Songwriting
-      // challenge with the unshortened forms of the soundcloud.app
-      // URLs, cause they're otherwise impossible to work with :(
-      const html = this.extractListingHtml(listing, true);
-      let songs = htmlExtractor(html);
-      songs.forEach((s) => {
-        s.extra_links = s.extra_links || [];
-        s.extra_links.push(`https://www.reddit.com${listing.data.permalink}`);
-        s.artist = listing.data.author;
-        s.title = s.title.trim();
-      });
-
-      if (
-        listing.data.body_html &&
-        listing.data.body_html.includes("soundcloud.app")
-      ) {
-        if (songs.find((s) => s.link.includes("soundcloud.com"))) {
-          songs = songs.filter((s) => !s.link.includes("soundcloud.app"));
+    let songs = [];
+    // Processing a list of posts
+    if (toProcess[0].kind == 't3') {
+      songs = flatMap(/** @type {RedditPost[]} */(toProcess), (post) => {
+        // Items with Reddit video
+        if (post.data.secure_media) {
+          const sm = post.data.secure_media;
+          if ('reddit_video' in sm) {
+            return {
+              title: post.data.title,
+              artist: post.data.author,
+              link: `https://www.reddit.com${post.data.permalink}`,
+              embed_link: sm.reddit_video.hls_url,
+            }
+          }
+          else if ('type' in sm) {
+            const song = {
+              title: post.data.title,
+              artist: post.data.author,
+              oembed: sm.oembed,
+              extra_links: [`https://www.reddit.com${post.data.permalink}`],
+            };
+            if (sm.type == 'youtube.com') {
+              song.link = `https://youtube.com/watch?v=${sm.oembed.html.match(/\/embed\/([^?]+)/)[1]}`;
+            }
+            else if (sm.type == 'm.youtube.com') {
+              song.link = `https://youtube.com/watch?v=${new URL(sm.oembed.url).searchParams.get('v')}`;
+            }
+            else if (sm.type == 'soundcloud.com') {
+              song.link = new URL(sm.oembed.html.match(/src="([^"]+)"/)[1]).searchParams.get('src');
+            }
+            else if (sm.type == 'audiomack.com') {
+              song.link = sm.oembed.url;
+            }
+            else {
+              throw new Error(`Unknown type: \n${JSON.stringify(sm)}`);
+            }
+            return song;
+          }
+          else {
+            throw new Error(`Unknown secure media: ${JSON.stringify(sm)}`);
+          }
         }
-      }
-
-      return songs;
-    });
+        else {
+          const html = this.extractListingHtml(post, true);
+          const postSongs = htmlExtractor(html)
+            .filter((s) => !s.link.includes("soundcloud.app"));
+          postSongs.forEach((s) => {
+            s.extra_links = s.extra_links || [];
+            s.extra_links.push(`https://www.reddit.com${post.data.permalink}`);
+            s.artist = post.data.author;
+            s.title = s.title.trim();
+          });
+          
+          return postSongs;
+        }
+      });
+    } else if (toProcess[0].kind == 't1') {
+      songs = flatMap(/** @type {RedditComment[]} */(toProcess), (comment) => {
+        // I've planted confederate comments inside the Songwriting
+        // challenge with the unshortened forms of the soundcloud.app
+        // URLs, cause they're otherwise impossible to work with :(
+        const html = this.extractListingHtml(comment, true);
+        let songs = htmlExtractor(html);
+        songs.forEach((s) => {
+          s.extra_links = s.extra_links || [];
+          s.extra_links.push(`https://www.reddit.com${comment.data.permalink}`);
+          s.artist = comment.data.author;
+          s.title = s.title.trim();
+        });
+  
+        if (
+          comment.data.body_html &&
+          comment.data.body_html.includes("soundcloud.app")
+        ) {
+          if (songs.find((s) => s.link.includes("soundcloud.com"))) {
+            songs = songs.filter((s) => !s.link.includes("soundcloud.app"));
+          }
+        }
+  
+        return songs;
+      });
+    } else {
+      throw new Error(`Unknown kind: ${JSON.stringify(toProcess)}`);
+    }
 
     return songs;
   }

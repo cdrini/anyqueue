@@ -48,10 +48,14 @@
     </template>
     <template v-slot:main>
       <component
-        v-if="queueProviderComponent"
+        v-if="
+          queueProviderComponent && (
+            (playerQueue.activeSong.extra_links && playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com')))
+            || playerQueue.activeSong.link.includes('reddit.com')
+          )"
         class="queue-provider-song-info"
         :is="queueProviderComponent"
-        :url="playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com'))"
+        :url="playerQueue.activeSong.link.includes('reddit.com') ? playerQueue.activeSong.link : playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com'))"
       />
       <component
         v-if="playerQueue.started && playerQueue.activeSong"
@@ -69,36 +73,41 @@
 </template>
 
 <script>
+import { csvParse } from "d3-dsv";
+import jsonUrl from "json-url";
+import Vue from "vue";
+import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
+// Import Bootstrap an BootstrapVue CSS files (order is important)
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+
+import { PlayerQueue } from "./models/PlayerQueue";
 import Playlist from "./components/Playlist";
 import PlayToolbar from "./components/PlayToolbar";
 import PlayerShell from "./components/PlayerShell";
+
+// Players
 import YouTubePlayer from "./components/SongPlayer/YouTubePlayer";
 import IAPlayer from "./components/SongPlayer/IAPlayer";
 import SoundCloudPlayer from "./components/SongPlayer/SoundCloudPlayer";
 import GoogleDrivePlayer from "./components/SongPlayer/GoogleDrivePlayer";
 import AudioMackPlayer from "./components/SongPlayer/AudioMackPlayer";
+import SpotifyPlayer from "./components/SongPlayer/SpotifyPlayer.vue";
+import RedditPlayer from "./components/SongPlayer/RedditPlayer.vue";
+
+// Providers
 import { YouTubeProvider } from "./models/SongProviders/YouTubeProvider.js";
 import { IAProvider } from "./models/SongProviders/IAProvider.js";
 import { SoundCloudProvider } from "./models/SongProviders/SoundCloudProvider.js";
 import { SpotifyProvider } from "./models/SongProviders/SpotifyProvider.js";
 import { GoogleDriveProvider } from "./models/SongProviders/GoogleDriveProvider.js";
 import { AudioMackProvider } from "./models/SongProviders/AudioMackProvider.js";
+import { RedditProvider } from "./models/SongProviders/RedditProvider.js";
 
 // Queue Providers
 import { HTMLQueueProvider, extractSongsFromHtml } from "./models/QueueProviders/HTMLQueueProvider.js";
 import { RedditQueueProvider } from "./models/QueueProviders/RedditQueueProvider.js";
 import ReddigtSongInfo from './components/QueueProviderSongInfo/RedditSongInfo.vue';
-
-import { csvParse } from "d3-dsv";
-import jsonUrl from "json-url";
-import { PlayerQueue } from "./models/PlayerQueue";
-import Vue from "vue";
-import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
-
-// Import Bootstrap an BootstrapVue CSS files (order is important)
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
-import SpotifyPlayer from "./components/SongPlayer/SpotifyPlayer.vue";
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);
@@ -127,6 +136,7 @@ const PROVIDERS = [
   { provider: new SpotifyProvider(), player: SpotifyPlayer },
   { provider: new GoogleDriveProvider(), player: GoogleDrivePlayer },
   { provider: new AudioMackProvider(), player: AudioMackPlayer },
+  { provider: new RedditProvider(), player: RedditPlayer },
 ];
 
 const QUEUE_PROVIDERS = [
@@ -160,7 +170,7 @@ async function processSongs(songs, activeIndex) {
   await Promise.all(
     songs.map(async (s) => {
       s.active = false;
-      const provider = PROVIDERS.find((p) => p.provider.testLink(s.link));
+      const provider = PROVIDERS.find((p) => p.provider.testSong(s));
       if (provider) {
         s.provider = provider.provider;
         s.player = provider.player;

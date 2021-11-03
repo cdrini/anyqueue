@@ -20,7 +20,7 @@ export class AudioMackProvider extends SongProvider {
   }
 
   async augmentMetadata(song) {
-    song.oembed = await this.fetchOembed(song.link);
+    song.oembed = song.oembed || await this.fetchOembed(song.link);
     song.title = song.oembed.title;
     song.artist = song.oembed.author_name;
     song.thumbnail_url = song.oembed.thumbnail_url;

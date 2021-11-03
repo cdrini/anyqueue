@@ -39,7 +39,7 @@ export class SoundCloudProvider extends SongProvider {
   }
 
   async augmentMetadata(song) {
-    song.oembed = await this.fetchOembed(song.link);
+    song.oembed = song.oembed || await this.fetchOembed(song.link);
     if (song.oembed === 404) {
       song.unavailable = true;
       return;

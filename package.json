@@ -16,6 +16,7 @@
     "json-url": "2.6.0",
     "lodash": "4.17.21",
     "player.js": "0.1.0",
+    "video.js": "^7.15.4",
     "vue": "^2.6.11",
     "vue-async-computed": "3.9.0",
     "vue-youtube": "1.4.0"

@@ -19,6 +19,13 @@ export class SongProvider {
     throw new Error("Not Implemented");
   }
 
+  /**
+   * @param {object} song
+   */
+  testSong(song) {
+    return this.testLink(song.link);
+  }
+
   /** @param {string} link */
   supported(link) {
     return true;
