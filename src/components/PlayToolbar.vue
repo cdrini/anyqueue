@@ -53,4 +53,12 @@ export default {
   flex: 1;
   padding: 0 8px;
 }
+
+.play-toolbar .song-tile__title {
+  /** Limit to only 2 lines */
+  -webkit-line-clamp: 2;
+  display: -webkit-inline-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 </style>
