@@ -96,6 +96,15 @@ interface RedditPost extends RedditItem {
       }
     }
     | {
+      type: 'open.spotify.com',
+      oembed: Oembed & {
+        type: "rich"
+        provider_name: 'Spotify'
+        provider_url: 'https://spotify.com/'
+        description: string
+      }
+    }
+    | {
       reddit_video: {
         /** Link to .mp4 file without audio */
         fallback_url: string

@@ -23,7 +23,7 @@ export class SongProvider {
    * @param {object} song
    */
   testSong(song) {
-    return this.testLink(song.link);
+    return this.testLink(song.link || '');
   }
 
   /** @param {string} link */

@@ -109,13 +109,16 @@ export class RedditQueueProvider {
             else if (sm.type == 'audiomack.com') {
               song.link = sm.oembed.url;
             }
+            else if (sm.type == 'open.spotify.com') {
+              song.link = new URL(sm.oembed.html.match(/src="([^"]+)"/)[1]).searchParams.get('src').replace('/embed', '');
+            }
             else {
-              throw new Error(`Unknown type: \n${JSON.stringify(sm)}`);
+              console.error('Unimplemented type', sm);
             }
             return song;
           }
           else {
-            throw new Error(`Unknown secure media: ${JSON.stringify(sm)}`);
+            console.error('Unknown secure media', sm);
           }
         }
         else {

@@ -20,7 +20,7 @@ export class SpotifyProvider extends SongProvider {
   }
 
   async augmentMetadata(song) {
-    song.oembed = await this.fetchOembed(song.link);
+    song.oembed = song.oembed || await this.fetchOembed(song.link);
     if (song.oembed) {
       song.title = song.oembed.title;
       song.thumbnail_url = song.oembed.thumbnail_url;
