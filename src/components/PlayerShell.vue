@@ -14,11 +14,13 @@
 .player-shell {
   width: 100%;
   height: 100%;
+  display: flex;
 }
 
 .player-shell__sidebar {
   display: flex;
   flex-direction: column;
+  border-right: 1px solid #aaa;
 }
 
 .player-shell__main {
@@ -26,38 +28,27 @@
 }
 
 @media (min-width: 960px) {
-  .player-shell {
-    flex-direction: row;
-  }
   .player-shell__sidebar {
     width: 500px;
-    border-right: 1px solid #AAA;
   }
 }
 
 @media (min-width: 600px) and (max-width: 960px) {
-  .player-shell {
-    flex-direction: row;
-  }
   .player-shell__sidebar {
     width: 400px;
-    border-right: 1px solid #AAA;
   }
 }
 
 @media (max-width: 600px) {
   .player-shell {
-    flex-direction: column;
+    /** Ensures there's a big of the main pane peaking as an affordance */
+    width: calc(200vw - 80px);
   }
   .player-shell__sidebar {
-    max-height: 66vh;
+    flex: 1;
   }
-
   .player-shell__main {
-    order: 1;
-  }
-  .player-shell__sidebar {
-    order: 2;
+    flex: 1;
   }
 }
 </style>

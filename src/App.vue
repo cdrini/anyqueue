@@ -48,16 +48,6 @@
     </template>
     <template v-slot:main>
       <component
-        v-if="
-          queueProviderComponent && (
-            (playerQueue.activeSong.extra_links && playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com')))
-            || playerQueue.activeSong.link.includes('reddit.com')
-          )"
-        class="queue-provider-song-info"
-        :is="queueProviderComponent"
-        :url="playerQueue.activeSong.link.includes('reddit.com') ? playerQueue.activeSong.link : playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com'))"
-      />
-      <component
         v-if="playerQueue.started && playerQueue.activeSong"
         :is="playerQueue.activeSong.player"
         ref="activeSongPlayer"
@@ -68,6 +58,16 @@
         @ended="skipForward(true)"
       />
       <div class="player-placeholder" v-else @click="playerQueue.start()" />
+      <component
+        v-if="
+          queueProviderComponent && (
+            (playerQueue.activeSong.extra_links && playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com')))
+            || playerQueue.activeSong.link.includes('reddit.com')
+          )"
+        class="queue-provider-song-info"
+        :is="queueProviderComponent"
+        :url="playerQueue.activeSong.link.includes('reddit.com') ? playerQueue.activeSong.link : playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com'))"
+      />
     </template>
   </PlayerShell>
 </template>
@@ -467,7 +467,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  display: flex;
 }
 
 html,
@@ -477,6 +476,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  overflow-x: auto;
 }
 
 .free-text-row {
@@ -548,12 +548,16 @@ body {
 
 .player-shell__main {
   background: rgba(51, 104, 161, 0.15);
-  display: flex;
-  flex-direction: column;
+  overflow-y: scroll;
+  position: relative;
 }
 
+.player-shell__main .song-player {
+  height: 80%;
+  width: 100%;
+}
 .player-shell__main .queue-provider-song-info {
-  height: 33%;
+  height: 80%;
 }
 
 .player-shell__sidebar {
