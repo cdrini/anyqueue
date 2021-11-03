@@ -1,5 +1,6 @@
 <template>
   <iframe
+    class="song-player sound-cloud-player"
     ref="iframe"
     width="100%"
     height="100%"

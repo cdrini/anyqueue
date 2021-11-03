@@ -1,5 +1,5 @@
 <template>
-  <div class="youtube-provider">
+  <div class="song-player youtube-provider">
     <youtube
       class="youtube-player"
       ref="youtube"

@@ -1,5 +1,6 @@
 <template>
   <iframe
+    class="song-player audio-mack-player"
     :src="embedUrl"
     ref="iframe"
     width="100%"

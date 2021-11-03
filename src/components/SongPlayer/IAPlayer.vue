@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="song-player internet-archive-player">
     <b-alert show variant="warning">
       IA doesn't post messages from its iframe, so we're relying on the length
       of the audio. If you pause/etc, it will likely behave incorrectly
