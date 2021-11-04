@@ -47,8 +47,31 @@
       <PlayToolbar :player-queue="playerQueue" />
     </template>
     <template v-slot:main>
+      <!-- YouTube iframe has a bug where it won't auto-play if offscreen when the player is first rendered. -->
+      <!-- To get around this, we render/keep the iframe "offscreen" and then render it onscreen when the player is ready. -->
+      <YouTubePlayer
+        ref="activeSongPlayer"
+        :autoplay="true"
+        :url="
+          playerQueue.started &&
+          playerQueue.activeSong &&
+          playerQueue.activeSong.player.name == 'YouTubePlayer'
+            ? playerQueue.activeSong.link
+            : ''
+        "
+        :active="
+          playerQueue.started &&
+          playerQueue.activeSong &&
+          playerQueue.activeSong.player.name == 'YouTubePlayer'
+        "
+        @ended="skipForward(true)"
+      />
       <component
-        v-if="playerQueue.started && playerQueue.activeSong"
+        v-if="
+          playerQueue.started &&
+          playerQueue.activeSong &&
+          playerQueue.activeSong.player.name != 'YouTubePlayer'
+        "
         :is="playerQueue.activeSong.player"
         ref="activeSongPlayer"
         :song="playerQueue.activeSong"
@@ -57,7 +80,11 @@
         :autoplay="true"
         @ended="skipForward(true)"
       />
-      <div class="player-placeholder" v-else @click="playerQueue.start()" />
+      <div
+        v-if="!(playerQueue.started && playerQueue.activeSong)"
+        class="player-placeholder"
+        @click="playerQueue.start()"
+      />
       <component
         v-if="
           queueProviderComponent && (
@@ -209,6 +236,7 @@ export default {
     Playlist,
     PlayToolbar,
     PlayerShell,
+    YouTubePlayer,
   },
   data() {
     return {

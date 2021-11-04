@@ -1,5 +1,5 @@
 <template>
-  <div class="song-player youtube-provider">
+  <div class="song-player youtube-provider" v-show="active">
     <youtube
       class="youtube-player"
       ref="youtube"
@@ -24,6 +24,10 @@ export default {
       type: String,
     },
     autoplay: {
+      type: Boolean,
+      default: false,
+    },
+    active: {
       type: Boolean,
       default: false,
     },
@@ -52,6 +56,8 @@ export default {
     },
 
     async onWindowBlur() {
+      if (!this.active) return;
+
       // Keep playing while switching tabs
       for (let i = 0; i < 3; i++) {
         await new Promise((res) => setTimeout(res, 100));
