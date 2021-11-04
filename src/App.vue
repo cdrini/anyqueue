@@ -83,7 +83,7 @@
       <div
         v-if="!(playerQueue.started && playerQueue.activeSong)"
         class="player-placeholder"
-        @click="playerQueue.start()"
+        @click="start()"
       />
       <component
         v-if="
@@ -302,6 +302,7 @@ export default {
       localStorage["App::activeSongIndex"] = val;
     },
     "playerQueue.activeSong"() {
+      this.updateMediaSession();
       if (this.playerQueue.started && !this.speakingWarning) {
         this.speakAnyWarnings();
       }
@@ -358,13 +359,7 @@ export default {
 
     async start() {
       this.playerQueue.start();
-
-      if ("mediaSession" in navigator) {
-        // navigator.mediaSession.setActionHandler('seekbackward', () => this.jumpBackward());
-        // navigator.mediaSession.setActionHandler('seekforward', () => this.jumpForward());
-        // navigator.mediaSession.setActionHandler('previoustrack', () => this.jumpBackward());
-        navigator.mediaSession.setActionHandler("nexttrack", this.skipForward);
-      }
+      this.updateMediaSession();
     },
 
     async makeShareLink() {
@@ -384,6 +379,37 @@ export default {
         new URLSearchParams({
           "share-lzma": await jsonUrl("lzma").compress(shareJson),
         });
+    },
+
+    updateMediaSession() {
+      if (!("mediaSession" in navigator)) return;
+
+      navigator.mediaSession.metadata = new window.MediaMetadata({
+        title: this.playerQueue.activeSong.title,
+        artist: this.playerQueue.activeSong.artist,
+        album: this.playerQueue.activeSong.album,
+        // artwork: [
+        //   { src: br.options.thumbnail, type: 'image/jpg' },
+        // ]
+      });
+      // navigator.mediaSession.setActionHandler('seekbackward', () => this.jumpBackward());
+      // navigator.mediaSession.setActionHandler('seekforward', () => this.jumpForward());
+      if (this.playerQueue.prevSong) {
+        navigator.mediaSession.setActionHandler(
+          "previoustrack",
+          this.skipBackward
+        );
+      } else {
+        navigator.mediaSession.setActionHandler("previoustrack", null);
+      }
+      if (this.playerQueue.nextSong) {
+        navigator.mediaSession.setActionHandler(
+          "nexttrack",
+          this.skipForward.bind(this, false)
+        );
+      } else {
+        navigator.mediaSession.setActionHandler("nexttrack", null);
+      }
     },
 
     exportPlaylist() {
@@ -456,6 +482,12 @@ export default {
       this.$refs.activeSongPlayer.pause();
     },
 
+    async skipBackward() {
+      if (this.playerQueue.prevSong) {
+        this.playerQueue.skipBack();
+      }
+    },
+
     async skipForward(speakLastSong = false) {
       if (speakLastSong) {
         const song = this.playerQueue.activeSong;
@@ -472,16 +504,6 @@ export default {
       }
 
       if (this.playerQueue.nextSong) {
-        if ("mediaSession" in window) {
-          navigator.mediaSession.metadata = new window.MediaMetadata({
-            title: this.nextSong.title,
-            artist: this.nextSong.artist,
-            album: this.nextSong.album,
-            // artwork: [
-            //   { src: br.options.thumbnail, type: 'image/jpg' },
-            // ]
-          });
-        }
         this.playerQueue.skip();
       }
     },
