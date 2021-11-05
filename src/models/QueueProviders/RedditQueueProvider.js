@@ -91,6 +91,9 @@ export class RedditQueueProvider {
             }
           }
           else if ('type' in sm) {
+            if (sm.oembed.html) {
+              sm.oembed.html = sm.oembed.html.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+            }
             const song = {
               title: post.data.title,
               artist: post.data.author,
@@ -104,7 +107,8 @@ export class RedditQueueProvider {
               song.link = `https://youtube.com/watch?v=${new URL(sm.oembed.url).searchParams.get('v')}`;
             }
             else if (sm.type == 'soundcloud.com') {
-              song.link = new URL(sm.oembed.html.match(/src="([^"]+)"/)[1]).searchParams.get('src');
+              // Not sure if this handles soundcloud.app links
+              song.link = post.data.url_overridden_by_dest;
             }
             else if (sm.type == 'audiomack.com') {
               song.link = sm.oembed.url;
