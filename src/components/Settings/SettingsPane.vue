@@ -220,11 +220,8 @@ export default {
 .settings-pane > label:has(input[type="checkbox"]) > input {
   width: 40px;
   scale: 0.4;
-}
-
-.settings-pane > label:has(select) {
-  display: flex;
-  flex-direction: column;
+  /* Width doesn't work on Safari, but padding does and doesn't do anything on the other ones*/
+  padding: 20px;
 }
 
 .settings-pane > label > select {
