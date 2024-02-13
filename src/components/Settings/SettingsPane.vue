@@ -24,13 +24,19 @@
         style="grid-area: 2 / 1 / auto / span 2"
       >
         <option value="">System Default</option>
-        <option
-          v-for="voice in voices"
-          :key="voice.voiceURI"
-          :value="voice.voiceURI"
+        <optgroup
+          v-for="group in voiceGroups"
+          :key="group[0]"
+          :label="group[0]"
         >
-          {{ voice.name }}
-        </option>
+          <option
+            v-for="voice in group[1]"
+            :key="voice.voiceURI"
+            :value="voice.voiceURI"
+          >
+            {{ voice.lang.replace("_", "-") }} | {{ voice.name }}
+          </option>
+        </optgroup>
       </select>
       <button
         type="button"
@@ -46,13 +52,30 @@
     <hr />
     <div class="aq-card__controls">
       <button type="reset" class="aq-pop-button" @click="reset">Reset</button>
-      <button type="submit" class="aq-pop-button primary" @click="saveSettings">Save</button>
+      <button type="submit" class="aq-pop-button primary" @click="saveSettings">
+        Save
+      </button>
     </div>
   </div>
 </template>
   
 <script>
 import { speak } from "../../utils/speech.js";
+
+/**
+ * @param {SpeechSynthesisVoice[]} voices
+ * @returns {Record<string, SpeechSynthesisVoice[]>}
+ */
+function groupVoicesByLanguage(voices) {
+  const groupedVoices = {};
+  for (const voice of voices) {
+    const lang = voice.lang.slice(0, 2);
+    if (!groupedVoices[lang]) groupedVoices[lang] = [];
+    groupedVoices[lang].push(voice);
+  }
+  return groupedVoices;
+}
+
 export default {
   name: "SettingsPane",
   props: {
@@ -73,6 +96,23 @@ export default {
         JSON.stringify(this.settings) !==
         JSON.stringify(this.tentative_settings)
       );
+    },
+    voiceGroups() {
+      const groups = groupVoicesByLanguage(this.voices);
+      const userLang = navigator.language.slice(0, 2);
+      const result = [[`Browser Language: ${userLang}`, groups[userLang] || []]];
+      if (userLang !== "en") {
+        result.push(["English", groups.en || []]);
+      }
+      result.push([
+        "Other",
+        Object.entries(groups)
+          .filter(([lang]) => lang !== "en" && lang !== userLang)
+          .flatMap(([, voices]) => voices),
+      ]);
+      return result
+        .filter(([, voices]) => voices.length)
+        .map(([label, voices]) => [label, voices.sort((a, b) => a.lang.localeCompare(b.lang))]);
     },
   },
 

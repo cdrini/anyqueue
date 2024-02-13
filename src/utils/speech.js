@@ -11,11 +11,17 @@ export function getBestVoice() {
 
 /**
  * @param {SpeechSynthesisUtterance} utterance
- * @param {SpeechSynthesisVoice} voice
+ * @param {SpeechSynthesisVoice} [voice]
  */
 export function speak(utterance, voice) {
   const mainPromise = new Promise((res, rej) => {
-    utterance.voice = voice;
+    if (voice) {
+      utterance.voice = voice;
+      // Chrome on Android won't change the voice if the language on the text
+      // is the same. Even then I'm not sure it's actually changing the voice...
+      // It also incorrectly sets the lang as "en_US" instead of "en-US".
+      utterance.lang = voice.lang.replace('_', '-');
+    }
     utterance.onend = res;
     utterance.onerror = rej;
     window.speechSynthesis.speak(utterance);
