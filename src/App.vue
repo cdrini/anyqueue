@@ -3,36 +3,12 @@
     <template v-slot:menus>
       <details>
         <summary>Import...</summary>
-        <!-- <div class="spreadsheet-row">
-            CSV:
-            <input type="url" v-model="this.csvLink" />
-            <button @click="loadSpreadsheet">Reload</button>
-          </div> -->
-        <div class="free-text-row">
-          <select v-model="inputFormat">
-            <option value="html">
-              HTML (e.g. copy paste from Google docs)
-            </option>
-            <option value="text">List of URLs</option>
-            <option value="csv">List of CSV song objects</option>
-            <option value="url">Fetch from url</option>
-          </select>
-          <small v-if="inputFormat == 'csv'">
-            Example: <code>"title","artist","link"</code>
-          </small>
-          <div v-if="inputFormat == 'url'">
-            Supported URLs: Reddit
-            <input type="url" v-model="inputUrl" />
-          </div>
-          <div v-else>
-            <textarea v-model="freeText" @paste="transformFreeTextPaste" />
-          </div>
-          <button @click="loadFreeText">Reload</button>
-        </div>
+
+        <ImportPane class="aq-card" @import="reloadSongs" />
       </details>
       <details>
         <summary>Settings</summary>
-        <SettingsPane :settings="settings" />
+        <SettingsPane class="aq-card" :settings="settings" />
       </details>
       <details v-if="urlParams.get('debug') === 'true'">
         <summary>Share/Export</summary>
@@ -68,7 +44,7 @@
           playerQueue.activeSong &&
           playerQueue.activeSong.player.name == 'YouTubePlayer'
         "
-        @ended="skipForward(true)"
+        @ended="skipForward(settings.dj_enabled)"
       />
       <component
         v-if="
@@ -91,20 +67,28 @@
       />
       <component
         v-if="
-          queueProviderComponent && (
-            (playerQueue.activeSong.extra_links && playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com')))
-            || playerQueue.activeSong.link.includes('reddit.com')
-          )"
+          queueProviderComponent &&
+          ((playerQueue.activeSong.extra_links &&
+            playerQueue.activeSong.extra_links.find((l) =>
+              l.includes('reddit.com')
+            )) ||
+            playerQueue.activeSong.link.includes('reddit.com'))
+        "
         class="queue-provider-song-info"
         :is="queueProviderComponent"
-        :url="playerQueue.activeSong.link.includes('reddit.com') ? playerQueue.activeSong.link : playerQueue.activeSong.extra_links.find(l => l.includes('reddit.com'))"
+        :url="
+          playerQueue.activeSong.link.includes('reddit.com')
+            ? playerQueue.activeSong.link
+            : playerQueue.activeSong.extra_links.find((l) =>
+                l.includes('reddit.com')
+              )
+        "
       />
     </template>
   </PlayerShell>
 </template>
 
 <script>
-import { csvParse } from "d3-dsv";
 import jsonUrl from "json-url";
 import Vue from "vue";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
@@ -135,14 +119,10 @@ import { GoogleDriveProvider } from "./models/SongProviders/GoogleDriveProvider.
 import { AudioMackProvider } from "./models/SongProviders/AudioMackProvider.js";
 import { RedditProvider } from "./models/SongProviders/RedditProvider.js";
 
-// Queue Providers
-import { HTMLQueueProvider, extractSongsFromHtml } from "./models/QueueProviders/HTMLQueueProvider.js";
-import { RedditQueueProvider } from "./models/QueueProviders/RedditQueueProvider.js";
-import ReddigtSongInfo from './components/QueueProviderSongInfo/RedditSongInfo.vue';
-
 // Other
 import { speak, getBestVoice } from "./utils/speech.js";
 import { getSettings, saveSettings } from "./models/Settings.js";
+import ImportPane, { importers } from "./components/ImportPane.vue";
 import SettingsPane from "./components/Settings/SettingsPane.vue";
 
 // Make BootstrapVue available throughout your project
@@ -158,11 +138,6 @@ const PROVIDERS = [
   { provider: new GoogleDriveProvider(), player: GoogleDrivePlayer },
   { provider: new AudioMackProvider(), player: AudioMackPlayer },
   { provider: new RedditProvider(), player: RedditPlayer },
-];
-
-const QUEUE_PROVIDERS = [
-  { provider: new RedditQueueProvider(), songInfo: ReddigtSongInfo },
-  { provider: new HTMLQueueProvider() },
 ];
 
 const SONGS = [
@@ -211,7 +186,7 @@ async function processSongs(songs, activeIndex) {
         } catch (err) {
           // Assume the song is no longer available
           s.unavailable = true;
-          s.warnings.push('An error ocurred');
+          s.warnings.push("An error ocurred");
         }
       }
     })
@@ -227,6 +202,7 @@ async function processSongs(songs, activeIndex) {
 export default {
   name: "App",
   components: {
+    ImportPane,
     Playlist,
     PlayToolbar,
     PlayerShell,
@@ -235,13 +211,7 @@ export default {
   },
   data() {
     return {
-      /** @type {'html' | 'text' | 'csv' | 'url'} */
-      inputFormat: "html",
       queueProviderComponent: null,
-      inputUrl: "",
-      csvLink:
-        "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmmpv0faY2yRLDcmGb1kHobGwfdOazcpNcL1u9649-AZfiHqeeTDji0bElgvFFMa-tl7h1-kBpngwv/pub?gid=0&single=true&output=csv",
-      freeText: "",
       songs: [],
 
       shareLink: null,
@@ -272,36 +242,34 @@ export default {
       ? await jsonUrl("lzma").decompress(shareParam)
       : {};
 
-    if (localStorage["App::csvLink"])
-      this.csvLink = localStorage["App::csvLink"];
-    if (localStorage["App::freeText"])
-      this.freeText = localStorage["App::freeText"];
     if (localStorage["App::activeSongIndex"])
       this.playerQueue.activeSongIndex = JSON.parse(
         localStorage["App::activeSongIndex"]
       );
 
+    let songs = this.songs;
+
     if (urlParams.has("url")) {
-      this.inputFormat = "url";
-      this.inputUrl = urlParams.get("url");
-      await this.loadFreeText();
+      const { queueProviderComponent, songs: urlSongs } = importers.url(
+        urlParams.get("url")
+      );
+      this.queueProviderComponent = queueProviderComponent;
+      songs = urlSongs;
     }
 
-    const songs =
-      shareObj.songs ||
-      (localStorage["App::songs"] && JSON.parse(localStorage["App::songs"])) ||
-      SONGS;
+    if (!songs?.length) {
+      songs =
+        shareObj.songs ||
+        (localStorage["App::songs"] &&
+          JSON.parse(localStorage["App::songs"])) ||
+        SONGS;
+    }
+
     await processSongs(songs, this.activeSongIndex);
     this.songs = songs;
     this.playerQueue.load(this.songs);
   },
   watch: {
-    csvLink(val) {
-      localStorage["App::csvLink"] = val;
-    },
-    freeText(val) {
-      localStorage["App::freeText"] = val;
-    },
     songs(val) {
       localStorage["App::songs"] = JSON.stringify(val);
     },
@@ -328,6 +296,12 @@ export default {
   },
 
   methods: {
+    async reloadSongs({ queueProviderComponent, songs }) {
+      this.queueProviderComponent = queueProviderComponent;
+      await processSongs(songs, 0);
+      this.songs = songs.filter((s) => s.provider);
+      this.playerQueue.load(this.songs);
+    },
     humanReadableWarning(song) {
       let warning = "";
       if (
@@ -353,21 +327,6 @@ export default {
       }
 
       this.speakingWarning = false;
-    },
-
-    /**
-     * @param {ClipboardEvent} ev
-     */
-    async transformFreeTextPaste(ev) {
-      if (this.inputFormat === "html") {
-        ev.preventDefault();
-        const items = ev.clipboardData.items;
-        let chosenItem = items[0];
-        for (const item of items) {
-          if (item.type === "text/html") chosenItem = item;
-        }
-        this.freeText = await new Promise((res) => chosenItem.getAsString(res));
-      }
     },
 
     async start() {
@@ -453,41 +412,6 @@ export default {
       window.Dropbox.save(blobUrl, `${playlist.title}.anyq.json`);
     },
 
-    async loadSpreadsheet() {
-      let csvString = await fetch(this.csvLink).then((r) => r.text());
-      // make the first line lowercase
-      csvString = csvString.replace(/^.*/, ($0) => $0.toLowerCase());
-      csvParse(csvString);
-    },
-
-    async loadFreeText() {
-      let songs = [];
-      this.queueProviderComponent = null;
-      if (this.inputFormat == "url") {
-        const {provider, songInfo = null} = QUEUE_PROVIDERS.find(({provider}) => provider.testUrl(this.inputUrl));
-        this.queueProviderComponent = songInfo;
-        songs = await provider.extract(this.inputUrl);
-      }
-      else if (this.inputFormat === "html") {
-        songs = extractSongsFromHtml(this.freeText);
-      }
-      else if (this.inputFormat === "text") {
-        songs = this.freeText
-          .trim()
-          .split("\n")
-          .map((l) => l.trim())
-          .map((link) => ({ title: "", artist: "", link }));
-      }
-      else if (this.inputFormat === "csv") {
-        songs = csvParse("title,artist,link\n" + this.freeText)
-      }
-
-      console.log(this.inputFormat, songs);
-      await processSongs(songs, 0);
-      this.songs = songs.filter((s) => s.provider);
-      this.playerQueue.load(this.songs);
-    },
-
     resume() {
       this.$refs.activeSongPlayer.resume();
     },
@@ -526,8 +450,9 @@ export default {
 
 <style>
 #app {
-  font-family: "Bahnschrift",-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
-    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: "Bahnschrift", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -544,27 +469,6 @@ body {
   padding: 0;
   overflow: hidden;
   overflow-x: auto;
-}
-
-.free-text-row {
-  padding: 4px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-}
-
-.free-text-row textarea {
-  white-space: pre;
-}
-
-.spreadsheet-row {
-  display: flex;
-  margin: 4px;
-  align-items: center;
-}
-.spreadsheet-row input {
-  flex: 1;
-  margin: 0 4px;
 }
 
 .playlist {
@@ -628,7 +532,7 @@ body {
 }
 
 .player-shell__sidebar {
-  background: #F4F9FD;
+  background: #f4f9fd;
   min-height: 0;
 }
 
@@ -642,11 +546,59 @@ body {
   background-size: 250px;
 }
 
-.settings-pane {
+.aq-card {
   border: 2px solid var(--aq-main-strong);
   border-radius: 8px;
   margin: 10px;
   padding: 10px 0;
   background: white;
+}
+
+.aq-pop-button {
+  --aq-button-bg: var(--aq-main-weak);
+  --aq-button-shadow: var(--aq-main-strong);
+  background: var(--aq-button-bg);
+  color: var(--aq-button-shadow);
+  border: 0;
+  border-radius: 8px;
+  padding: 5px;
+
+  box-shadow: 4px 4px 0 0 var(--aq-button-shadow);
+
+  transform: translate(-4px, -4px);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.aq-pop-button.primary {
+  --aq-button-bg: var(--aq-main-strong);
+  --aq-button-shadow: var(--aq-main-weak);
+  color: white;
+  box-shadow: 4px 4px 0 0 var(--aq-button-shadow);
+  min-width: 100px;
+}
+
+.aq-pop-button:hover {
+  filter: brightness(1.1);
+}
+
+.aq-pop-button:active,
+.aq-pop-button.active {
+  filter: brightness(0.9);
+  box-shadow: 0 0 0 1px var(--aq-button-shadow);
+  transform: translate(0, 0) scale(0.9);
+}
+
+.aq-pop-button:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  transform: translate(0, 0);
+  pointer-events: none;
+}
+
+.aq-card__controls {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 0 10px;
 }
 </style>

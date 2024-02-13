@@ -35,6 +35,7 @@
       <button
         type="button"
         @click="speakPreview"
+        class="aq-pop-button"
         :class="{ active: speaking }"
         style="grid-area: 1 / 2"
       >
@@ -43,9 +44,9 @@
       </button>
     </label>
     <hr />
-    <div class="settings-pane__controls">
-      <button type="reset" @click="reset">Reset</button>
-      <button type="submit" class="primary" @click="saveSettings">Save</button>
+    <div class="aq-card__controls">
+      <button type="reset" class="aq-pop-button" @click="reset">Reset</button>
+      <button type="submit" class="aq-pop-button primary" @click="saveSettings">Save</button>
     </div>
   </div>
 </template>
@@ -182,54 +183,6 @@ export default {
   grid-template: auto auto / 1fr auto;
   gap: 5px;
   align-items: center;
-}
-
-.settings-pane button {
-  --aq-button-bg: var(--aq-main-weak);
-  --aq-button-shadow: var(--aq-main-strong);
-  background: var(--aq-button-bg);
-  color: var(--aq-button-shadow);
-  border: 0;
-  border-radius: 8px;
-  padding: 5px;
-
-  box-shadow: 4px 4px 0 0 var(--aq-button-shadow);
-
-  transform: translate(-4px, -4px);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.settings-pane button.primary {
-  --aq-button-bg: var(--aq-main-strong);
-  --aq-button-shadow: var(--aq-main-weak);
-  color: white;
-  box-shadow: 4px 4px 0 0 var(--aq-button-shadow);
-  min-width: 100px;
-}
-
-.settings-pane button:hover {
-  filter: brightness(1.1);
-}
-
-.settings-pane button:active,
-.settings-pane button.active {
-  filter: brightness(0.9);
-  box-shadow: 0 0 0 1px var(--aq-button-shadow);
-  transform: translate(0, 0) scale(0.9);
-}
-
-.settings-pane button:disabled {
-  opacity: 0.6;
-  box-shadow: none;
-  transform: translate(0, 0);
-  pointer-events: none;
-}
-
-.settings-pane__controls {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  padding: 0 10px;
 }
 </style>
   
