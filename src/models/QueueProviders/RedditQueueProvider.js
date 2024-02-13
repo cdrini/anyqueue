@@ -127,8 +127,9 @@ export class RedditQueueProvider {
         }
         else {
           const html = this.extractListingHtml(post, true);
+          const permalink = `https://www.reddit.com${post.data.permalink}`;
           const postSongs = htmlExtractor(html)
-            .filter((s) => !s.link.includes("soundcloud.app"));
+            .filter((s) => !s.link.includes("soundcloud.app") && s.link != permalink);
           postSongs.forEach((s) => {
             s.extra_links = s.extra_links || [];
             s.extra_links.push(`https://www.reddit.com${post.data.permalink}`);
