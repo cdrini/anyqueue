@@ -619,8 +619,9 @@ body {
   width: 100%;
   height: 100%;
   cursor: pointer;
-  background: url("/favicon.ico");
+  background: url("/src/assets/favicon.svg");
   background-repeat: no-repeat;
   background-position: center;
+  background-size: 250px;
 }
 </style>
