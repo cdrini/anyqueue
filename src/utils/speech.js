@@ -12,8 +12,9 @@ export function getBestVoice() {
 /**
  * @param {SpeechSynthesisUtterance} utterance
  * @param {SpeechSynthesisVoice} [voice]
+ * @param {number} [rate]
  */
-export function speak(utterance, voice) {
+export function speak(utterance, voice, rate) {
   const mainPromise = new Promise((res, rej) => {
     if (voice) {
       utterance.voice = voice;
@@ -21,6 +22,9 @@ export function speak(utterance, voice) {
       // is the same. Even then I'm not sure it's actually changing the voice...
       // It also incorrectly sets the lang as "en_US" instead of "en-US".
       utterance.lang = voice.lang.replace('_', '-');
+    }
+    if (rate) {
+      utterance.rate = rate;
     }
     utterance.onend = res;
     utterance.onerror = rej;

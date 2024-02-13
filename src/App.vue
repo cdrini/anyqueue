@@ -323,7 +323,7 @@ export default {
       const warning = this.humanReadableWarning(song);
       if (warning) {
         const utterance = new SpeechSynthesisUtterance(warning);
-        await speak(utterance, this.selectedVoice);
+        await speak(utterance, this.selectedVoice, this.settings.dj_rate);
       }
 
       this.speakingWarning = false;
@@ -437,7 +437,7 @@ export default {
         text += ".";
         if (song.recommender) text += ` Recommended by ${song.recommender}.`;
         const utterance = new SpeechSynthesisUtterance(text);
-        await speak(utterance, this.selectedVoice);
+        await speak(utterance, this.selectedVoice, this.settings.dj_rate);
       }
 
       if (this.playerQueue.nextSong) {

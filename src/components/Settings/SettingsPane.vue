@@ -49,6 +49,30 @@
         Preview
       </button>
     </label>
+    <label :class="{ disabled: !tentative_settings.dj_enabled }">
+      <span class="label-body">
+        DJ Voice Speed
+        <small>Choose how quickly the DJ speaks.</small>
+      </span>
+      <input
+        type="range"
+        min="0.1"
+        max="3"
+        step="0.1"
+        v-model.number="tentative_settings.dj_rate"
+        :disabled="!tentative_settings.dj_enabled"
+        list="dj-rate-ticks"
+      />
+      <datalist id="dj-rate-ticks">
+        <option value="0.1" label="0.1x"></option>
+        <option value="0.5" label="0.5x"></option>
+        <option value="1" label="1x"></option>
+        <option value="1.5" label="1.5x"></option>
+        <option value="2" label="2x"></option>
+        <option value="2.5" label="2.5x"></option>
+        <option value="3" label="3x"></option>
+      </datalist>
+    </label>
     <hr />
     <div class="aq-card__controls">
       <button type="reset" class="aq-pop-button" @click="reset">Reset</button>
@@ -100,7 +124,9 @@ export default {
     voiceGroups() {
       const groups = groupVoicesByLanguage(this.voices);
       const userLang = navigator.language.slice(0, 2);
-      const result = [[`Browser Language: ${userLang}`, groups[userLang] || []]];
+      const result = [
+        [`Browser Language: ${userLang}`, groups[userLang] || []],
+      ];
       if (userLang !== "en") {
         result.push(["English", groups.en || []]);
       }
@@ -112,7 +138,10 @@ export default {
       ]);
       return result
         .filter(([, voices]) => voices.length)
-        .map(([label, voices]) => [label, voices.sort((a, b) => a.lang.localeCompare(b.lang))]);
+        .map(([label, voices]) => [
+          label,
+          voices.sort((a, b) => a.lang.localeCompare(b.lang)),
+        ]);
     },
   },
 
@@ -134,7 +163,8 @@ export default {
         utterance,
         window.speechSynthesis
           .getVoices()
-          .find((voice) => voice.voiceURI === this.tentative_settings.dj_voice)
+          .find((voice) => voice.voiceURI === this.tentative_settings.dj_voice),
+        this.tentative_settings.dj_rate
       );
       this.speaking = false;
     },
@@ -223,6 +253,30 @@ export default {
   grid-template: auto auto / 1fr auto;
   gap: 5px;
   align-items: center;
+}
+
+input[type="range"] {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  margin-top: 5px;
+}
+
+input[type="range"] + datalist {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  writing-mode: vertical-lr;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+input[type="range"] + datalist > option {
+  padding: 0;
+  transform: rotate(-90deg);
+  font-size: 0.8em;
 }
 </style>
   
