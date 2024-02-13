@@ -250,7 +250,7 @@ export default {
     let songs = this.songs;
 
     if (urlParams.has("url")) {
-      const { queueProviderComponent, songs: urlSongs } = importers.url(
+      const { queueProviderComponent, songs: urlSongs } = await importers.url(
         urlParams.get("url")
       );
       this.queueProviderComponent = queueProviderComponent;
