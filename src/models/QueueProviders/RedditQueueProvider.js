@@ -117,7 +117,9 @@ export class RedditQueueProvider {
               song.link = new URL(sm.oembed.html.match(/src="([^"]+)"/)[1]).searchParams.get('src').replace('/embed', '');
             }
             else {
-              console.error('Unimplemented type', sm);
+              song.unavailable = true;
+              song.warnings = song.warnings || [];
+              song.warnings.push('cannot embed');
             }
             return song;
           }

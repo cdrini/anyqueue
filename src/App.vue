@@ -170,7 +170,7 @@ async function processSongs(songs, activeIndex) {
       if (provider) {
         s.provider = provider.provider;
         s.player = provider.player;
-        s.warnings = [];
+        s.warnings = s.warnings || [];
 
         if (s.player.supportsAutoplay === false) {
           s.warnings.push(`autostart`);
@@ -265,7 +265,7 @@ export default {
         SONGS;
     }
 
-    await processSongs(songs, this.activeSongIndex);
+    await processSongs(songs, this.playerQueue.activeSongIndex);
     this.songs = songs;
     this.playerQueue.load(this.songs);
   },
@@ -304,7 +304,9 @@ export default {
     },
     humanReadableWarning(song) {
       let warning = "";
-      if (
+      if (!song.player) {
+        warning = "We do not know how to play this type of song.";
+      } else if (
         song.player.supportsAutoplay === false &&
         song.player.supportsEndEvent === false
       ) {

@@ -42,10 +42,13 @@ export default {
     warningsHover() {
       if (!this.song) return "";
 
+      if (!this.song.provider) {
+        return `This url is not supported by anyqueue yet.`;
+      }
       if (this.song.unavailable) {
         return `Unable to find song; perhaps it was deleted from ${this.song.provider.name}?`;
       }
-      if (this.song.warnings && this.song.warnings.length) {
+      if (this.song.warnings?.length) {
         return `${
           this.song.provider.name
         } does not support: ${this.song.warnings.join(", ")}`;

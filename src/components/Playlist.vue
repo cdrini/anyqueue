@@ -15,7 +15,7 @@
               <span class="chunky-button__label">Play</span>
             </button>
             <a
-              v-for="link in [song.link, ...(song.extra_links || [])]"
+              v-for="link in [song.link, ...(song.extra_links || [])].filter(x => x)"
               :key="link"
               class="chunky-button naked-anchor naked-button song-listing__view"
               target="_blank"
