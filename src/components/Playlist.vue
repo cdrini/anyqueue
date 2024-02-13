@@ -55,8 +55,11 @@ export default {
 
   methods: {
     getFavIcon(url) {
-      const base = url.match(/https?:\/\/[^/]+/)[0];
-      return base + "/favicon.ico";
+      const parsedUrl = new URL(url);
+      // Strip subdomains to get the favicon
+      // Fixes on.soundcloud.com links
+      const host = parsedUrl.host.match(/\.?([^.]+\.[^.]+)$/)[1];
+      return `${parsedUrl.protocol}//${host}/favicon.ico`;
     },
   },
 };
