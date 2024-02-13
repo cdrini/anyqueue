@@ -30,6 +30,10 @@
           <button @click="loadFreeText">Reload</button>
         </div>
       </details>
+      <details>
+        <summary>Settings</summary>
+        <SettingsPane :settings="settings" />
+      </details>
       <details v-if="urlParams.get('debug') === 'true'">
         <summary>Share/Export</summary>
         <!-- <button @click="makeShareLink">Get Share Link</button> -->
@@ -136,25 +140,15 @@ import { HTMLQueueProvider, extractSongsFromHtml } from "./models/QueueProviders
 import { RedditQueueProvider } from "./models/QueueProviders/RedditQueueProvider.js";
 import ReddigtSongInfo from './components/QueueProviderSongInfo/RedditSongInfo.vue';
 
+// Other
+import { speak, getBestVoice } from "./utils/speech.js";
+import { getSettings, saveSettings } from "./models/Settings.js";
+import SettingsPane from "./components/Settings/SettingsPane.vue";
+
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
-
-function speak(utterance) {
-  const mainPromise = new Promise((res, rej) => {
-    utterance.onend = res;
-    utterance.onerror = rej;
-    window.speechSynthesis.speak(utterance);
-  });
-
-  return Promise.race([
-    mainPromise,
-    // Because safari is... how do you say... complete garbage?
-    // It sometimes doesn't fire the onend event -_-
-    new Promise((res) => setTimeout(res, 3000)),
-  ]);
-}
 
 const PROVIDERS = [
   { provider: new YouTubeProvider(), player: YouTubePlayer },
@@ -236,6 +230,7 @@ export default {
     Playlist,
     PlayToolbar,
     PlayerShell,
+    SettingsPane,
     YouTubePlayer,
   },
   data() {
@@ -255,7 +250,19 @@ export default {
       speakingWarning: false,
 
       urlParams: new URLSearchParams(window.location.search),
+
+      settings: getSettings(),
     };
+  },
+
+  computed: {
+    selectedVoice() {
+      return (
+        speechSynthesis
+          .getVoices()
+          .find((v) => v.voiceURI === this.settings.dj_voice) || getBestVoice()
+      );
+    },
   },
 
   async mounted() {
@@ -312,6 +319,12 @@ export default {
         this.speakAnyWarnings();
       }
     },
+    settings: {
+      handler(val) {
+        saveSettings(val);
+      },
+      deep: true,
+    },
   },
 
   methods: {
@@ -336,7 +349,7 @@ export default {
       const warning = this.humanReadableWarning(song);
       if (warning) {
         const utterance = new SpeechSynthesisUtterance(warning);
-        await speak(utterance);
+        await speak(utterance, this.selectedVoice);
       }
 
       this.speakingWarning = false;
@@ -500,7 +513,7 @@ export default {
         text += ".";
         if (song.recommender) text += ` Recommended by ${song.recommender}.`;
         const utterance = new SpeechSynthesisUtterance(text);
-        await speak(utterance);
+        await speak(utterance, this.selectedVoice);
       }
 
       if (this.playerQueue.nextSong) {
@@ -513,10 +526,14 @@ export default {
 
 <style>
 #app {
-  font-family: "Roboto", "Avenir", Helvetica, Arial, sans-serif;
+  font-family: "Bahnschrift",-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+
+  --aq-main-strong: rgb(42, 119, 212);
+  --aq-main-weak: #bed5ff;
 }
 
 html,
@@ -556,7 +573,7 @@ body {
 }
 
 .play-toolbar {
-  border-top: 2px solid rgb(42, 119, 212);
+  border-top: 2px solid var(--aq-main-strong);
   background: rgba(63, 138, 255, 0.22);
 }
 
@@ -623,5 +640,13 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 250px;
+}
+
+.settings-pane {
+  border: 2px solid var(--aq-main-strong);
+  border-radius: 8px;
+  margin: 10px;
+  padding: 10px 0;
+  background: white;
 }
 </style>
