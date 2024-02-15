@@ -72,12 +72,12 @@
             playerQueue.activeSong.extra_links.find((l) =>
               l.includes('reddit.com')
             )) ||
-            playerQueue.activeSong.link.includes('reddit.com'))
+            playerQueue.activeSong.link?.includes?.('reddit.com'))
         "
         class="queue-provider-song-info"
         :is="queueProviderComponent"
         :url="
-          playerQueue.activeSong.link.includes('reddit.com')
+          playerQueue.activeSong.link?.includes?.('reddit.com')
             ? playerQueue.activeSong.link
             : playerQueue.activeSong.extra_links.find((l) =>
                 l.includes('reddit.com')
@@ -303,21 +303,25 @@ export default {
       this.playerQueue.load(this.songs);
     },
     humanReadableWarning(song) {
-      let warning = "";
       if (!song.player) {
-        warning = "We do not know how to play this type of song.";
-      } else if (
-        song.player.supportsAutoplay === false &&
-        song.player.supportsEndEvent === false
-      ) {
-        warning = `Because this next song is from ${song.provider.name}, you'll need to manually click "play" to start the song, and manually click "skip" once the song is over.`;
-      } else if (!song.player.supportsAutoplay === false) {
-        warning = `Because this next song is from ${song.provider.name}, you'll need to manually click "play" to start the song.`;
-      } else if (!song.player.supportsEndEvent === false) {
-        warning = `Because this next song is from ${song.provider.name}, you'll need to manually click "skip" once the song is over.`;
+        return "We do not know how to play this type of song.";
       }
+      
+      const prefix = `Because this next song is from ${song.provider.name}`;
+      const warnings = [
+        [song.player.supportsFullSong === false, `only a preview is available`],
+        [song.player.supportsAutoplay === false, `you'll need to manually click "play" to start the song`],
+        [song.player.supportsEndEvent === false, `you'll need to manually click "skip" once the song is over`],
+      ]
 
-      return warning;
+      const message = warnings
+        .filter(([condition]) => condition)
+        .map(([, message]) => message)
+        .join(", ");
+      
+      if (message) {
+        return `${prefix}, ${message}.`;
+      }
     },
     async speakAnyWarnings() {
       this.speakingWarning = true;

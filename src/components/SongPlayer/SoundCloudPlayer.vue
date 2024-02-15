@@ -14,15 +14,7 @@
 </template>
 
 <script>
-async function loadScript(url) {
-  return new Promise((res, rej) => {
-    const script = document.createElement("script");
-    script.onload = res;
-    script.onerror = rej;
-    script.src = url;
-    document.head.append(script);
-  });
-}
+import { loadScript } from "@/utils/utils.js";
 
 // Doesn't seem to be synchronizing correctly, so just
 // do it here once.
