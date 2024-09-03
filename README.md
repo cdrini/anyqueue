@@ -1,2 +1,8 @@
 # anyqueue
-Created with CodeSandbox
+
+## Development
+
+```bash
+pnpm install
+pnpm serve
+```

@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@vue/cli-plugin-babel": "^5.0.8",
-    "bootstrap": "5.0.1",
-    "bootstrap-vue": "2.21.2",
+    "bootstrap": "5.3.3",
+    "bootstrap-vue": "2.23.1",
     "d3-dsv": "2.0.0",
     "json-url": "2.6.0",
     "lodash": "4.17.21",
@@ -22,10 +22,9 @@
     "vue-youtube": "1.4.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.23.10",
+    "@babel/eslint-parser": "^7.25.1",
     "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-service": "^5.0.8",
-    "@vue/runtime-dom": "^3.4.19",
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.21.1",
     "icon-gen": "^2.1.0",
