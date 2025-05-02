@@ -1,15 +1,23 @@
 <template>
   <PlayerShell id="app">
     <template v-slot:menus>
-      <details>
-        <summary>Import...</summary>
+      <div class="app-bar">
+        <img src="@/assets/favicon.svg" class="app-bar__logo" />
+        <h1>AnyQueue</h1>
+        <div style="flex: 1" />
+        <div>
+          <button class="naked-button" title="Import..." @click="togglePane('import')">
+            <b-icon-plus-square />
+          </button>
+          <button class="naked-button" title="Settings" @click="togglePane('settings')">
+            <b-icon-gear-fill />
+          </button>
+        </div>
+      </div>
 
-        <ImportPane class="aq-card" @import="reloadSongs" />
-      </details>
-      <details>
-        <summary>Settings</summary>
-        <SettingsPane class="aq-card" :settings="settings" />
-      </details>
+      <ImportPane v-if="openPane == 'import'" class="aq-card" @import="reloadSongs" />
+      <SettingsPane v-else-if="openPane == 'settings'" class="aq-card" :settings="settings" />
+
       <details v-if="urlParams.get('debug') === 'true'">
         <summary>Share/Export</summary>
         <!-- <button @click="makeShareLink">Get Share Link</button> -->
@@ -211,6 +219,8 @@ export default {
   },
   data() {
     return {
+      openPane: null,
+
       queueProviderComponent: null,
       songs: [],
 
@@ -296,6 +306,13 @@ export default {
   },
 
   methods: {
+    togglePane(pane) {
+      if (this.openPane === pane) {
+        this.openPane = null;
+      } else {
+        this.openPane = pane;
+      }
+    },
     async reloadSongs({ queueProviderComponent, songs }) {
       this.queueProviderComponent = queueProviderComponent;
       await processSongs(songs, 0);
@@ -480,6 +497,36 @@ body {
 .playlist {
   flex: 1;
   overflow-y: auto;
+}
+
+.app-bar {
+  display: flex;
+  align-items: center;
+  background: var(--aq-main-weak);
+  gap: 10px;
+  overflow: hidden;
+  overflow: clip;
+  height: 40px;
+  border-bottom: 2px solid var(--aq-main-strong);
+}
+.app-bar__logo {
+  width: 40px;
+  height: 40px;
+  transform: scale(2);
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+.app-bar button {
+  padding: 10px 8px;
+  color: inherit;
+}
+.app-bar h1 {
+  font-size: 24px;
+  padding: 10px 0;
+  font-weight: bold;
+  margin: 0;
+  color: var(--aq-main-strong);
+  margin-left: -38px;
 }
 
 .play-toolbar {
