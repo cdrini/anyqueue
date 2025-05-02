@@ -491,6 +491,7 @@ export default {
   color: #2c3e50;
 
   --aq-main-strong: rgb(42, 119, 212);
+  --aq-main-dark: rgba(11, 79, 163, 0.85);
   --aq-main-weak: #bed5ff;
 }
 
@@ -529,7 +530,7 @@ body {
 }
 .app-bar button {
   padding: 10px 8px;
-  color: inherit;
+  color: var(--aq-main-dark);
 }
 .app-bar h1 {
   font-size: 24px;
