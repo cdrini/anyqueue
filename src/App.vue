@@ -15,8 +15,18 @@
         </div>
       </div>
 
-      <ImportPane v-if="openPane == 'import'" class="aq-card" @import="reloadSongs" />
-      <SettingsPane v-else-if="openPane == 'settings'" class="aq-card" :settings="settings" />
+      <ImportPane
+        v-if="openPane == 'import'"
+        class="aq-card"
+        @import="reloadSongs"
+        @close="openPane = null"
+      />
+      <SettingsPane
+        v-else-if="openPane == 'settings'"
+        class="aq-card"
+        :settings="settings"
+        @close="openPane = null"
+      />
 
       <details v-if="urlParams.get('debug') === 'true'">
         <summary>Share/Export</summary>
@@ -508,6 +518,7 @@ body {
   overflow: clip;
   height: 40px;
   border-bottom: 2px solid var(--aq-main-strong);
+  border-top: 2px solid var(--aq-main-strong);
 }
 .app-bar__logo {
   width: 40px;
@@ -653,5 +664,25 @@ body {
   gap: 10px;
   justify-content: flex-end;
   padding: 0 10px;
+}
+
+.aq-dialog {
+  z-index: 10000;
+  bottom: 0;
+  left: 0;
+  padding-top: 0;
+  overflow: clip;
+}
+.aq-dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: var(--aq-main-weak);
+  color: var(--aq-main-strong);
+}
+.aq-dialog > header > h2 {
+  font-size: 16px;
+  margin: 0;
 }
 </style>

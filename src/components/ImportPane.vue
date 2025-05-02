@@ -1,40 +1,48 @@
 <template>
-  <form class="import-pane" @submit.prevent="processImport">
-    <select v-model="inputFormat">
-      <option value="html">HTML (e.g. copy paste from Google docs)</option>
-      <option value="text">List of Song URLs</option>
-      <option value="csv">List of CSV song objects</option>
-      <option value="url">Fetch from url</option>
-    </select>
-    <small v-if="inputFormat == 'csv'">
-      Example: <code>"title","artist","link"</code>
-    </small>
-    <div v-if="inputFormat == 'url'">
-      <small>
-        Supported URLs: Reddit. Examples:
-        <ul>
-          <li v-for="url in urlSamples" :key="url">
-            <a :href="url" target="_blank" @click.prevent="inputUrl = url">{{
-              url
-            }}</a>
-          </li>
-        </ul>
-      </small>
-      <input type="url" v-model="inputUrl" placeholder="https://..." />
-    </div>
-    <div v-if="inputFormat == 'html'">
-      <textarea v-model="freeText" @paste="transformFreeTextPaste" />
-    </div>
-    <div v-if="inputFormat == 'text'">
-      <textarea v-model="freeText" />
-    </div>
-    <hr />
-    <div class="aq-card__controls">
-      <button class="aq-pop-button primary" type="submit" :disabled="importing">
-        Import
+  <dialog class="aq-dialog import-pane">
+    <header>
+      <h2>Import Songs</h2>
+      <button class="naked-button" @click="$emit('close')">
+        <b-icon-x-lg />
       </button>
-    </div>
-  </form>
+    </header>
+    <form @submit.prevent="processImport">
+      <select v-model="inputFormat">
+        <option value="html">HTML (e.g. copy paste from Google docs)</option>
+        <option value="text">List of Song URLs</option>
+        <option value="csv">List of CSV song objects</option>
+        <option value="url">Fetch from url</option>
+      </select>
+      <small v-if="inputFormat == 'csv'">
+        Example: <code>"title","artist","link"</code>
+      </small>
+      <div v-if="inputFormat == 'url'">
+        <small>
+          Supported URLs: Reddit. Examples:
+          <ul>
+            <li v-for="url in urlSamples" :key="url">
+              <a :href="url" target="_blank" @click.prevent="inputUrl = url">{{
+                url
+              }}</a>
+            </li>
+          </ul>
+        </small>
+        <input type="url" v-model="inputUrl" placeholder="https://..." />
+      </div>
+      <div v-if="inputFormat == 'html'">
+        <textarea v-model="freeText" @paste="transformFreeTextPaste" />
+      </div>
+      <div v-if="inputFormat == 'text'">
+        <textarea v-model="freeText" />
+      </div>
+      <hr />
+      <div class="aq-card__controls">
+        <button class="aq-pop-button primary" type="submit" :disabled="importing">
+          Import
+        </button>
+      </div>
+    </form>
+  </dialog>
 </template>
 
 <script>

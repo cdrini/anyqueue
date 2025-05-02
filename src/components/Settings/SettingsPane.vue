@@ -1,5 +1,11 @@
 <template>
-  <div class="settings-pane">
+  <dialog class="aq-dialog settings-pane">
+    <header>
+      <h2>Settings</h2>
+      <button class="naked-button" @click="$emit('close')">
+        <b-icon-x-lg />
+      </button>
+    </header>
     <label>
       <input type="checkbox" v-model="tentative_settings.dj_enabled" />
       <span class="label-body">
@@ -80,7 +86,7 @@
         Save
       </button>
     </div>
-  </div>
+  </dialog>
 </template>
   
 <script>
