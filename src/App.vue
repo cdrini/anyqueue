@@ -4,12 +4,15 @@
       <div class="app-bar">
         <img src="@/assets/favicon.svg" class="app-bar__logo" />
         <h1>AnyQueue</h1>
+        <button class="naked-button" title="Import..." @click="togglePane('explore')" :class="{ active: openPane == 'explore' }">
+          Explore
+        </button>
         <div style="flex: 1" />
         <div>
-          <button class="naked-button" title="Import..." @click="togglePane('import')">
+          <button class="naked-button" title="Import... (alpha)" @click="togglePane('import')" :class="{ active: openPane == 'import' }">
             <b-icon-plus-square />
           </button>
-          <button class="naked-button" title="Settings" @click="togglePane('settings')">
+          <button class="naked-button" title="Settings" @click="togglePane('settings')" :class="{ active: openPane == 'settings' }">
             <b-icon-gear-fill />
           </button>
         </div>
@@ -34,8 +37,14 @@
         <!-- <a :href="this.shareLink">{{ this.shareLink }}</a> -->
         <button @click="saveToDropbox">Save to Dropbox</button>
       </details>
+
+      <TagExplorer
+        v-if="openPane == 'explore'"
+      />
+
       <Playlist
         class="playlist"
+        v-if="openPane !== 'explore'"
         :songs="songs"
         :playerQueue="playerQueue"
         @song-clicked="(index) => playerQueue.playTrackAt(index)"
@@ -153,6 +162,7 @@ import { speak, getBestVoice } from "./utils/speech.js";
 import { getSettings, saveSettings } from "./models/Settings.js";
 import ImportPane, { importers } from "./components/ImportPane.vue";
 import SettingsPane from "./components/Settings/SettingsPane.vue";
+import TagExplorer from "./components/TagExplorer.vue";
 
 // Types
 /** @typedef {import('@/src/models/Types.ts').QueueProvider} QueueProvider */
@@ -241,6 +251,7 @@ export default {
     PlayerShell,
     RedditQueueControls,
     SettingsPane,
+    TagExplorer,
     YouTubePlayer,
   },
   data() {
@@ -281,7 +292,7 @@ export default {
       ? await jsonUrl("lzma").decompress(shareParam)
       : {};
 
-    if (localStorage["App::activeSongIndex"])
+    if (localStorage["App::activeSongIndex"] && localStorage["App::activeSongIndex"] !== "undefined")
       this.playerQueue.activeSongIndex = JSON.parse(
         localStorage["App::activeSongIndex"]
       );
@@ -561,7 +572,30 @@ body {
 .app-bar button {
   padding: 10px 8px;
   color: var(--aq-main-dark);
+  position: relative;
 }
+.app-bar button.active::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 8px;
+  background: var(--aq-main-dark);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 4px;
+  animation: scale-up 0.2s;
+}
+
+@keyframes scale-up {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
 .app-bar h1 {
   font-size: 24px;
   padding: 10px 0;

@@ -162,7 +162,7 @@ export default {
     async speakPreview() {
       if (this.speaking) return;
       const utterance = new SpeechSynthesisUtterance(
-        'That was "Seven Nation Army" by The Red Stripes.'
+        'That was "Seven Nation Army" by The White Stripes.'
       );
       this.speaking = true;
       await speak(

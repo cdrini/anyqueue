@@ -1,7 +1,7 @@
 <template>
   <dialog class="aq-dialog import-pane">
     <header>
-      <h2>Import Songs</h2>
+      <h2>Import Songs (alpha)</h2>
       <button class="naked-button" @click="$emit('close')">
         <b-icon-x-lg />
       </button>
