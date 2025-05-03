@@ -691,7 +691,7 @@ body {
   font-weight: bold;
   margin: 0;
   color: var(--aq-main-strong);
-  margin-left: -38px;
+  margin-left: -28px;
 }
 
 .play-toolbar {
