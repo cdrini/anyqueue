@@ -371,9 +371,9 @@ export default {
   watch: {
     openSidebar(val) {
       if (val) {
-        location.hash = val;
+        history.replaceState(null, "", location.href.replace(/#.*$/, "") + `#${val}`);
       } else {
-        location.hash = "";
+        history.replaceState(null, "", location.href.replace(/#.*$/, ""));
       }
     },
     songs(val) {
