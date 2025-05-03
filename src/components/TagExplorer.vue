@@ -11,7 +11,11 @@
             v-for="subreddit in subreddits"
             :key="subreddit.Subreddit"
           >
-            <a :href="`/?url=${ subreddit.Subreddit }`" :title="subreddit.Description || null">
+            <a
+              :class="{ active: subreddit.Subreddit === activeSubreddit }"
+              :href="`/?url=${ subreddit.Subreddit }`"
+              :title="subreddit.Description || null"
+            >
               {{ subreddit.Subreddit.replace(/^\/r\//, "") }}
             </a>
           </li>
@@ -33,6 +37,13 @@ export default {
   name: "TagExplorer",
   components: {
     LoadingIcon,
+  },
+
+  props: {
+    activeSubreddit: {
+      type: String,
+      default: null,
+    },
   },
 
   data() {
@@ -88,6 +99,8 @@ export default {
   text-decoration: none;
   position: relative;
   display: inline-block;
+  border-radius: 10px;
+  color: var(--aq-pill-color, currentColor);
 }
 
 .tag-explorer li > a[title] {
@@ -95,18 +108,23 @@ export default {
 }
 
 .tag-explorer li:nth-child(3n) > a {
-  color: #2563b1;
+  --aq-pill-color: #2563b1;
 }
 
 .tag-explorer li:nth-child(3n + 1) > a {
-  color: #0cb8a0;
+  --aq-pill-color: #0cb8a0;
 }
 
 .tag-explorer li:nth-child(3n + 2) > a {
-  color: #620cb8;
+  --aq-pill-color: #620cb8;
 }
 
-.tag-explorer li:hover a::before {
+.tag-explorer li a.active {
+  background-color: var(--aq-pill-color, currentColor);
+  color: #fff;
+}
+
+.tag-explorer li a:hover::before {
   position: absolute;
   background-color: currentColor;
   border-radius: 10px;
@@ -116,5 +134,7 @@ export default {
   top: 0;
   left: 0;
   opacity: 0.15;
+  pointer-events: none;
 }
+
 </style>

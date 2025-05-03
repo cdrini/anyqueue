@@ -43,6 +43,7 @@
 
       <TagExplorer
         v-if="openPane == 'explore'"
+        :active-subreddit="queueProvider && queueProvider.name == 'reddit' && queueProvider.subreddit"
       />
 
       <Playlist
