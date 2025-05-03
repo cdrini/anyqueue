@@ -51,7 +51,6 @@ Electronic music,/r/fidget
 Electronic music,/r/filth
 Electronic music,/r/frenchelectro
 Electronic music,/r/frenchhouse
-Electronic music,/r/funkhouse
 Electronic music,/r/fusiondancemusic
 Electronic music,/r/futurebeats
 Electronic music,/r/FutureFunkAirlines
@@ -68,8 +67,9 @@ Electronic music,/r/house
 Electronic music,/r/idm
 Electronic music,/r/industrialmusic
 Electronic music,/r/ItaloDisco
+Electronic music,/r/jungle
 Electronic music,/r/latinhouse
-Electronic music,/r/LiquidDubstep
+Electronic music,/r/LiquidDnB
 Electronic music,/r/mashups
 Electronic music,/r/melodichouse
 Electronic music,/r/minimal
@@ -89,6 +89,7 @@ Electronic music,/r/raggajungle
 Electronic music,/r/RealDubstep
 Electronic music,/r/skweee
 Electronic music,/r/swinghouse
+Electronic music,/r/synthwave
 Electronic music,/r/tech_house
 Electronic music,/r/Techno
 Electronic music,/r/Trance
@@ -107,6 +108,7 @@ Rock/Metal,/r/AlternativeRock
 Rock/Metal,/r/AltCountry
 Rock/Metal,/r/AORMelodic
 Rock/Metal,/r/ausmetal,"Australian metal"
+Rock/Metal,/r/blackgaze
 Rock/Metal,/r/BlackMetal
 Rock/Metal,/r/bluegrass
 Rock/Metal,/r/Blues
@@ -133,6 +135,7 @@ Rock/Metal,/r/folkpunk
 Rock/Metal,/r/folkrock
 Rock/Metal,/r/folkunknown
 Rock/Metal,/r/GaragePunk
+Rock/Metal,/r/GarageRock
 Rock/Metal,/r/GothicMetal
 Rock/Metal,/r/Grunge
 Rock/Metal,/r/hardcore
@@ -151,13 +154,13 @@ Rock/Metal,/r/metal
 Rock/Metal,/r/metalcore
 Rock/Metal,/r/ModernRockMusic
 Rock/Metal,/r/monsterfuzz
-Rock/Metal,/r/neopsychedelia
 Rock/Metal,/r/NewWave
 Rock/Metal,/r/noiserock
 Rock/Metal,/r/numetal
 Rock/Metal,/r/pianorock
 Rock/Metal,/r/poppunkers
 Rock/Metal,/r/PostHardcore
+Rock/Metal,/r/postmetal
 Rock/Metal,/r/PostRock
 Rock/Metal,/r/powermetal
 Rock/Metal,/r/powerpop
@@ -169,6 +172,8 @@ Rock/Metal,/r/Punkskahardcore
 Rock/Metal,/r/Punk_Rock
 Rock/Metal,/r/raprock,"rap rock, rap metal, & rapcore"
 Rock/Metal,/r/Rock
+Rock/Metal,/r/RockArgentino
+Rock/Metal,/r/rockhall
 Rock/Metal,/r/shoegaze
 Rock/Metal,/r/stonerrock
 Rock/Metal,/r/symphonicblackmetal
@@ -179,6 +184,7 @@ Rock/Metal,/r/truethrash
 Rock/Metal,/r/Truemetal
 Rock/Metal,/r/OutlawCountry
 Rock/Metal,/r/WomenRock
+Rock/Metal,/r/YachtRock
 Hip-hop,/r/80sHipHop
 Hip-hop,/r/90sHipHop
 Hip-hop,/r/altrap
@@ -212,14 +218,19 @@ By Decade,/r/80sMusic
 By Decade,/r/70sMusic
 By Decade,/r/60sMusic
 By Decade,/r/50sMusic
+By Decade,/r/Music1940s
+By country/region/culture,/r/albanianmusic
+By country/region/culture,/r/AustinMusicians
 By country/region/culture,/r/AfricanMusic
 By country/region/culture,/r/afrobeat
 By country/region/culture,/r/balkanbrass
 By country/region/culture,/r/balkanmusic
 By country/region/culture,/r/brazilianmusic
 By country/region/culture,/r/britpop
+By country/region/culture,/r/citypop
 By country/region/culture,/r/CroatianMusic
 By country/region/culture,/r/Flamenco
+By country/region/culture,/r/greekmusic
 By country/region/culture,/r/international_music
 By country/region/culture,/r/Irishmusic
 By country/region/culture,/r/ItalianMusic
@@ -230,56 +241,76 @@ By country/region/culture,/r/MoscowBeat,"Russian"
 By country/region/culture,/r/RoMusic,"Romanian"
 By country/region/culture,/r/spop,"Sweden"
 By country/region/culture,/r/somluso,"Portuguese"
+By country/region/culture,/r/TorontoMusic
 By country/region/culture,/r/UKbands
+By country/region/culture,/r/ukmusic
 By country/region/culture,/r/WorldMusic
 Other,/r/70s
 Other,/r/Acappella
 Other,/r/AcousticCovers
 Other,/r/ambientfolk
 Other,/r/animemusic
-Other,/r/BestOfDisney
+Other,/r/AntiFolk
+Other,/r/AvantGardeMusic
+Other,/r/bassmusic
 Other,/r/boomswing
 Other,/r/bossanova
+Other,/r/BrokenBeat
 Other,/r/carmusic
 Other,/r/concerts
 Other,/r/chillmusic
 Other,/r/chillwave
 Other,/r/cpop
 Other,/r/Complextro
+Other,/r/Cumbia
+Other,/r/CozyMusic
 Other,/r/dancepunk
+Other,/r/DarkAmbient
 Other,/r/dembow
 Other,/r/disco
 Other,/r/DreamPop
+Other,/r/drone
 Other,/r/dub
 Other,/r/Elephant6
 Other,/r/ETIMusic,"a place for epic, trailer, and instrumental music"
 Other,/r/Exotica
-Other,/r/FilmMusic
+Other,/r/Funk
 Other,/r/FunkSouMusic
+Other,/r/futurefunk
+Other,/r/freejazz
 Other,/r/gamemusic
 Other,/r/GamesMusicMixMash
 Other,/r/GunslingerMusic
 Other,/r/GypsyJazz
+Other,/r/HappyMusic
+Other,/r/HYPERPOP
 Other,/r/IndieFolk
+Other,/r/ItaloHouse
+Other,/r/INFPmusic
 Other,/r/jambands
+Other,/r/JanglePop
+Other,/r/japanoise
 Other,/r/jazz
 Other,/r/JazzFusion
 Other,/r/JazzInfluence
 Other,/r/listentoconcerts
 Other,/r/klezmer
-Other,/r/lt10k,"links to music videos with less than 10,000 views"
 Other,/r/MedievalMusic
 Other,/r/MelancholyMusic
 Other,/r/minimalism_music
 Other,/r/motown
+Other,/r/MovieMusic
 Other,/r/MusicForConcentration
 Other,/r/muzyka
+Other,/r/NightMusic
 Other,/r/NuDisco
+Other,/r/obscuremusic
 Other,/r/oldiemusic
 Other,/r/OldiesMusic,"for those who miss and enjoy music from back in the day"
 Other,/r/pianocovers
 Other,/r/popheads,"for discussion of pop music"
 Other,/r/PoptoRock
+Other,/r/queercore
 Other,/r/QuietStorm
 Other,/r/rainymood
 Other,/r/recordstorefinds
@@ -289,12 +320,13 @@ Other,/r/RetroMusic
 Other,/r/rnb
 Other,/r/RnBHeads
 Other,/r/rootsmusic
+Other,/r/SadMusic
 Other,/r/SalsaMusic
+Other,/r/seashanties
 Other,/r/Ska
 Other,/r/Soca,"all about the TnT sound. Soca, Calypso, or similar music"
 Other,/r/songbooks
-Other,/r/Soulies
-Other,/r/SoulDivas
+Other,/r/Soul
 Other,/r/SoundsVintage
 Other,/r/SpaceMusic
 Other,/r/SurfPunk
@@ -308,9 +340,9 @@ Other,/r/triphop
 Other,/r/vaporwave
 Other,/r/VintageObscura,"old and rare records"
 Other,/r/vocaloid
+Other,/r/WitchHouse
+Other,/r/Zydeco
 Multi-genre,/r/audioinsurrection,"a backdrop for sharing radical music from all genres."
-Multi-genre,/r/albumaday,"one album recommendation every day"
-Multi-genre,/r/albumoftheday,"different album every day of the year!"
 Multi-genre,/r/Albums
 Multi-genre,/r/albumlisteners
 Multi-genre,/r/bassheavy
@@ -328,7 +360,6 @@ Multi-genre,/r/EarlyMusic,"music from the Renaissance and earlier"
 Multi-genre,/r/earlymusicalnotation,"manuscripts and facsimiles from late antiquity through 1600 CE"
 Multi-genre,/r/FemaleVocalists
 Multi-genre,/r/festivals
-Multi-genre,/r/findaband
 Multi-genre,/r/FitTunes,"whatever you like to listen to while working out"
 Multi-genre,/r/FreeAlbums
 Multi-genre,/r/freemusic
@@ -342,7 +373,6 @@ Multi-genre,/r/HeadNodders
 Multi-genre,/r/heady
 Multi-genre,/r/HeyThatWasIn
 Multi-genre,/r/HighFidelity
-Multi-genre,/r/ifyoulikeblank
 Multi-genre,/r/ilikethissong
 Multi-genre,/r/indie,"the place to share and discuss indie music"
 Multi-genre,/r/IndieWok
@@ -363,7 +393,6 @@ Multi-genre,/r/llawenyddhebddiwedd,"Welsh language music"
 Multi-genre,/r/LongerJams
 Multi-genre,/r/Lyrics
 Multi-genre,/r/mainstreammusic
-Multi-genre,/r/makemeaplaylist,"making playlists by requesting a category"
 Multi-genre,/r/MiddleEasternMusic
 Multi-genre,/r/MLPtunes
 Multi-genre,/r/Music
@@ -391,19 +420,9 @@ Multi-genre,/r/unheardof
 Multi-genre,/r/WhatIListenTo
 Multi-genre,/r/WTFMusicVideos
 Community,/r/audiophilemusic,"for those with an affliction for high fidelity sound"
-Community,/r/AustinMusicians
 Community,/r/bandmembers
-Community,/r/CarAV
-Community,/r/CassetteCulture
-Community,/r/Cd_collectors
-Community,/r/ConcertTickets
 Community,/r/germusic,"for music by German artists or in the German language"
 Community,/r/glastonbury_festival
-Community,/r/ICanComposeThat
-Community,/r/ICoveredASong
-Community,/r/ifyoulikeblank
-Community,/r/independentmusic
-Community,/r/ineedasong
 Community,/r/japanesemusic
 Community,/r/Jazzguitar,"a community for jazz guitarists"
 Community,/r/koreanmusic
@@ -411,28 +430,14 @@ Community,/r/LubbockMusicians,"current day music scene of Buddy Holly's hometown
 Community,/r/mixcd
 Community,/r/musiccritics
 Community,/r/MusicalComedy
-Community,/r/musicessentials
-Community,/r/MusicEventMeetUp
-Community,/r/musicfestivals
-Community,/r/musicnews
-Community,/r/MusiciansBlogs
 Community,/r/Musicians
 Community,/r/MusicProduction
-Community,/r/NeedVocals,"a subreddit to help composers find vocal talent to cooperate in the creation of songs"
 Community,/r/OSOM
 Community,/r/performer
 Community,/r/RecordClub
 Community,/r/recordstore
-Community,/r/redditmusicclub
-Community,/r/Rockband
-Community,/r/RockbandChallenges
-Community,/r/TheSongRemainsTheSame
-Community,/r/TipOfMyTongue
 Community,/r/TouringMusicians
-Community,/r/vinyl
-Community,/r/VinylReleases
 Community,/r/WeAreTheMusicMakers
-Redditor-made music,/r/300Songs
 Redditor-made music,/r/AcousticOriginals
 Redditor-made music,/r/BedroomBands
 Redditor-made music,/r/Composer
@@ -440,10 +445,13 @@ Redditor-made music,/r/ICoveredASong
 Redditor-made music,/r/independentmusic
 Redditor-made music,/r/MusicCritique
 Redditor-made music,/r/MusicInTheMaking
+Redditor-made music,/r/musicmakers
 Redditor-made music,/r/MyMusic
+Redditor-made music,/r/piano
 Redditor-made music,/r/RadioReddit
 Redditor-made music,/r/RoastMyTrack
-Redditor-made music,/r/ratemyband
+Redditor-made music,/r/RateMyPerformance
+Redditor-made music,/r/shareyourmusic
 Redditor-made music,/r/Songwriters
 Redditor-made music,/r/Songwriting
 Redditor-made music,/r/TheseAreOurAlbums
