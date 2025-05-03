@@ -101,6 +101,7 @@ export default {
   display: inline-block;
   border-radius: 10px;
   color: var(--aq-pill-color, currentColor);
+  line-height: 1em;
 }
 
 .tag-explorer li > a[title] {

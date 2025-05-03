@@ -4,7 +4,7 @@
       <div class="app-bar">
         <img src="@/assets/favicon.svg" class="app-bar__logo" />
         <h1>AnyQueue</h1>
-        <button class="naked-button" @click="togglePane('explore')" :class="{ active: openPane == 'explore' }">
+        <button class="naked-button" @click="toggleSidebar('explore')" :class="{ active: openSidebar == 'explore' }">
           Explore
         </button>
         <button class="naked-button" title="Random" @click="chooseRandomSubreddit">
@@ -42,13 +42,13 @@
       </details>
 
       <TagExplorer
-        v-if="openPane == 'explore'"
+        v-if="openSidebar == 'explore'"
         :active-subreddit="queueProvider && queueProvider.name == 'reddit' && queueProvider.subreddit"
       />
 
       <Playlist
         class="playlist"
-        v-if="openPane !== 'explore'"
+        v-else
         :songs="songs"
         :playerQueue="playerQueue"
         @song-clicked="(index) => playerQueue.playTrackAt(index)"
@@ -264,6 +264,9 @@ export default {
   },
   data() {
     return {
+      /** @type {'explore' | null} */
+      openSidebar: null,
+      /** @type {'import' | 'settings' | null} */
       openPane: null,
 
       /** @type {QueueProvider} */
@@ -360,8 +363,8 @@ export default {
 
   methods: {
     async chooseRandomSubreddit() {
-      // first open the explore pane
-      this.openPane = "explore";
+      // first open the explore sidebar
+      this.openSidebar = "explore";
       await pollUntilTruthy(() => this.$el.querySelector('.tag-explorer a'));
       const links = Array.from(
         this.$el.querySelectorAll(".tag-explorer a")
@@ -373,6 +376,13 @@ export default {
       const newAppUrl = new URL(window.location);
       newAppUrl.searchParams.set("url", url);
       window.location = newAppUrl.href.replace(/url=[^&]+/, "url=" + url.replace(/%2F/g, "/"));
+    },
+    toggleSidebar(sidebar) {
+      if (this.openSidebar === sidebar) {
+        this.openSidebar = null;
+      } else {
+        this.openSidebar = sidebar;
+      }
     },
     togglePane(pane) {
       if (this.openPane === pane) {
