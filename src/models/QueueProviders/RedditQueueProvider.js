@@ -8,10 +8,71 @@ import { extractSongsFromHtml } from "./HTMLQueueProvider.js";
  */
 export class RedditQueueProvider {
   /**
+   * @param {string} url
+   */
+  constructor(url) {
+    this.name = 'reddit';
+    /** @type {string} */
+    this.url = url;
+    /** @type {string} */
+    this.fullUrl = this.expandUrl(url);
+    const urlParts = this.parseRedditUrl(this.fullUrl);
+    this.subreddit = urlParts.subreddit;
+    this.sort = urlParts.sort;
+    this.time = urlParts.time;
+  }
+
+  /**
+   * @param {string} url
+   * @returns {{ subreddit: string, sort: 'best' | 'hot' | 'new' | 'rising' } | 
+   *  { subreddit: string, sort: 'top', time: 'hour' | 'day' | 'week' | 'month' | 'year' | 'all' } |
+   *  { subreddit: string }
+   * }
+   */
+  parseRedditUrl(url) {
+    // eg  https://www.reddit.com/r/listentothis/top/
+    // eg  https://www.reddit.com/r/listentothis/top/?t=all
+
+    const urlObj = new URL(url);
+    const subreddit = urlObj.pathname.match(/r\/[^/]+/)[0];
+    let sort = urlObj.pathname.split('/')[3];
+    const time = /** @type {'hour' | 'day' | 'week' | 'month' | 'year' | 'all' | null} */(urlObj.searchParams.get('t'));
+    if (!sort) {
+      sort = 'best';
+    }
+
+    switch (sort) {
+      case 'best':
+      case 'hot':
+      case 'new':
+      case 'rising':
+        return { subreddit, sort };
+      case 'top':
+        return { subreddit, sort, time: time || 'all' };
+      default:
+        return {subreddit}
+    }
+  }
+
+  /**
    * @param {string} url 
    */
-  testUrl(url) {
+  static testUrl(url) {
     return url.startsWith('/r/') || url.startsWith('r/') || url.includes('reddit.');
+  }
+
+  /**
+   * @param {string} url
+   * @returns {string}
+   */
+  expandUrl(url) {
+    if (url.startsWith("r/")) {
+      url = "/" + url;
+    }
+    if (url.startsWith("/r/")) {
+      url = "https://www.reddit.com" + url;
+    }
+    return url;
   }
 
   /**
@@ -48,11 +109,7 @@ export class RedditQueueProvider {
    * @param {function(string): import('@/src/models/Types.ts').Song[]} [opts.htmlExtractor]
    */
   async extract(url, { htmlExtractor = extractSongsFromHtml } = {}) {
-    if (url.startsWith("/r/")) {
-      // The link is mis-behaving on Reddit's mobile webapp :/ It's removing
-      // the domain for some ungodly reason.
-      url = "https://www.reddit.com" + url;
-    }
+    url = this.expandUrl(url);
 
     // Set default for the r/SongWriting post 😅
     const urlObj = new URL(url);

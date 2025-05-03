@@ -52,22 +52,26 @@ import { extractSongsFromHtml } from "../models/QueueProviders/HTMLQueueProvider
 import { HTMLQueueProvider } from "../models/QueueProviders/HTMLQueueProvider.js";
 import { RedditQueueProvider } from "../models/QueueProviders/RedditQueueProvider.js";
 import RedditSongInfo from "./QueueProviderSongInfo/RedditSongInfo.vue";
+/** @typedef {import('@/src/models/Types.ts').QueueProvider} QueueProvider */
+/** @typedef {import('@/src/models/Types.ts').Song} Song */
 
 const QUEUE_PROVIDERS = [
-  { provider: new RedditQueueProvider(), songInfo: RedditSongInfo },
-  { provider: new HTMLQueueProvider() },
+  { providerClass: RedditQueueProvider, songInfo: RedditSongInfo },
+  { providerClass: HTMLQueueProvider },
 ];
 
 /**
- * @type {Record<'html' | 'text' | 'csv' | 'url', (data: string) => Promise<{ format: string, data: string, activeSongInfoComponent: any, songs: import('../models/Song').Song[] }>>}
+ * @type {Record<'html' | 'text' | 'csv' | 'url', (data: string) => Promise<{ format: string, data: string, provider?: QueueProvider, activeSongInfoComponent: any, songs: Song[] }>>}
  */
 export const importers = {
   async url(url) {
-    const { provider, songInfo = null } = QUEUE_PROVIDERS.find(({ provider }) =>
-      provider.testUrl(url)
-    );
+    const { providerClass, songInfo = null } = QUEUE_PROVIDERS
+      .find(({ providerClass }) => providerClass.testUrl(url));
+
+    const provider = new providerClass(url);
     return {
       format: "url",
+      provider,
       data: url,
       activeSongInfoComponent: songInfo,
       songs: await provider.extract(url),

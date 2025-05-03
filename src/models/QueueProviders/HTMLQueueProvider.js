@@ -34,11 +34,13 @@ export function extractSongsFromHtml(html) {
  * @implements {QueueProvider}
  */
 export class HTMLQueueProvider {
+  name = 'html';
+
   /**
    * @param {string} url
    */
   // eslint-disable-next-line no-unused-vars
-  testUrl(url) {
+  static testUrl(url) {
     // This will handle all urls if it gets
     return true;
   }

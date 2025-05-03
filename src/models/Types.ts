@@ -13,6 +13,6 @@ export interface Song {
 }
 
 export interface QueueProvider {
-    testUrl(url: string): boolean;
+    name: string;
     extract(url: string, opts: any): Promise<Song[]>;
 }

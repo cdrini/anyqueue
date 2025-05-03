@@ -28,6 +28,19 @@
         @close="openPane = null"
       />
 
+      <div
+        v-if="queueProvider && queueProvider.name == 'reddit'"
+        class="reddit-header"
+      >
+        <header>
+          <img src="https://reddit.com/favicon.ico">
+          <a class="reddit-header__title naked-button" :href="queueProvider.fullUrl" target="_blank">
+            {{ queueProvider.subreddit }}
+            <b-icon-box-arrow-up-right />
+          </a>
+        </header>
+      </div>
+
       <details v-if="urlParams.get('debug') === 'true'">
         <summary>Share/Export</summary>
         <!-- <button @click="makeShareLink">Get Share Link</button> -->
@@ -143,6 +156,10 @@ import { getSettings, saveSettings } from "./models/Settings.js";
 import ImportPane, { importers } from "./components/ImportPane.vue";
 import SettingsPane from "./components/Settings/SettingsPane.vue";
 
+// Types
+/** @typedef {import('@/src/models/Types.ts').QueueProvider} QueueProvider */
+/** @typedef {import('@/src/models/Types.ts').Song} Song */
+
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
@@ -231,7 +248,10 @@ export default {
     return {
       openPane: null,
 
+      /** @type {QueueProvider} */
+      queueProvider: null,
       activeSongInfoComponent: null,
+      /** @type {Song[]} */
       songs: [],
 
       shareLink: null,
@@ -270,9 +290,14 @@ export default {
     let songs = this.songs;
 
     if (urlParams.has("url")) {
-      const { activeSongInfoComponent, songs: urlSongs } = await importers.url(
+      const {
+        activeSongInfoComponent,
+        provider = null,
+        songs: urlSongs,
+      } = await importers.url(
         urlParams.get("url")
       );
+      this.queueProvider = provider;
       this.activeSongInfoComponent = activeSongInfoComponent;
       songs = urlSongs;
     }
@@ -527,6 +552,7 @@ body {
   transform: scale(2);
   mix-blend-mode: multiply;
   opacity: 0.5;
+  pointer-events: none;
 }
 .app-bar button {
   padding: 10px 8px;
@@ -685,5 +711,32 @@ body {
 .aq-dialog > header > h2 {
   font-size: 16px;
   margin: 0;
+}
+
+
+.reddit-header {
+  background: #ff440047;
+  margin: 10px;
+  border-radius: 10px;
+  padding: 10px;
+  overflow: hidden;
+  overflow: clip;
+}
+
+.reddit-header > header {
+  display: flex;
+  align-items: center;
+}
+
+.reddit-header > header > img {
+  pointer-events: none;
+  transform: scale(2);
+  mix-blend-mode: multiply;
+  opacity: 0.4;
+}
+
+.reddit-header__title {
+  color: inherit;
+  text-decoration: none;
 }
 </style>
