@@ -1,5 +1,6 @@
 <template>
   <div class="playlist" :class="{ started: playerQueue.started }">
+    <slot name="header" />
     <ol>
       <li
         class="song-wrapper"

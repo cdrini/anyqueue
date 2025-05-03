@@ -28,12 +28,6 @@
         @close="openPane = null"
       />
 
-      <RedditQueueControls
-        v-if="queueProvider && queueProvider.name == 'reddit'"
-        :queueProvider="queueProvider"
-        @urlChange="handleUrlChange"
-      />
-
       <details v-if="urlParams.get('debug') === 'true'">
         <summary>Share/Export</summary>
         <!-- <button @click="makeShareLink">Get Share Link</button> -->
@@ -45,7 +39,15 @@
         :songs="songs"
         :playerQueue="playerQueue"
         @song-clicked="(index) => playerQueue.playTrackAt(index)"
-      />
+      >
+        <template v-slot:header>
+          <RedditQueueControls
+            v-if="queueProvider && queueProvider.name == 'reddit'"
+            :queueProvider="queueProvider"
+            @urlChange="handleUrlChange"
+          />
+        </template>
+      </Playlist>
     </template>
     <template v-slot:toolbar>
       <PlayToolbar :player-queue="playerQueue" />
@@ -580,10 +582,11 @@ body {
   transition: background-color 0.2s;
   border-radius: 4px;
   margin: 1px;
+  cursor: pointer;
 }
 
 .naked-button:hover {
-  background: rgba(0, 0, 255, 0.1);
+  background: var(--aq-hover-color, rgba(0, 0, 255, 0.1));
 }
 
 .naked-anchor {

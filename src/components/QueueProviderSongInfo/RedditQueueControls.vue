@@ -1,14 +1,19 @@
 <template>
   <div class="reddit-header">
+    <img class="reddit-header__logo" src="https://reddit.com/favicon.ico" alt="" />
     <header>
-      <img src="https://reddit.com/favicon.ico">
       <a class="reddit-header__title naked-button" :href="queueProvider.fullUrl" target="_blank">
         {{ queueProvider.subreddit }}
         <b-icon-box-arrow-up-right />
       </a>
     </header>
 
-    <select v-if="queueProvider.sort" v-model="queueProvider.sort" @change="$emit('urlChange', queueProvider.updateUrl())">
+    <select
+      class="naked-button"
+      v-if="queueProvider.sort"
+      v-model="queueProvider.sort"
+      @change="$emit('urlChange', queueProvider.updateUrl())"
+    >
       <option disabled selected>Sort by</option>
       <option value="best">Best</option>
       <option value="hot">Hot</option>
@@ -16,7 +21,12 @@
       <option value="top">Top</option>
       <option value="rising">Rising</option>
     </select>
-    <select v-if="queueProvider.time" v-model="queueProvider.time" @change="$emit('urlChange', queueProvider.updateUrl())">
+    <select
+      class="naked-button"
+      v-if="queueProvider.time"
+      v-model="queueProvider.time"
+      @change="$emit('urlChange', queueProvider.updateUrl())"
+    >
       <option value="hour">Now</option>
       <option value="day">This Day</option>
       <option value="week">This Week</option>
@@ -49,6 +59,11 @@ export default {
   padding: 10px;
   overflow: hidden;
   overflow: clip;
+  position: relative;
+}
+
+.reddit-header .naked-button {
+  --aq-hover-color: #ff440030;
 }
 
 .reddit-header > header {
@@ -56,11 +71,14 @@ export default {
   align-items: center;
 }
 
-.reddit-header > header > img {
+.reddit-header__logo {
+  position: absolute;
+  right: 0;
+  top: 0;
   pointer-events: none;
   transform: scale(2);
   mix-blend-mode: multiply;
-  opacity: 0.4;
+  opacity: 0.25;
 }
 
 .reddit-header__title {
