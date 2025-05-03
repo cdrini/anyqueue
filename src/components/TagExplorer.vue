@@ -29,12 +29,9 @@
 </template>
 
 <script>
-import { csvParse } from "d3-dsv";
 import { groupBy } from "lodash";
 import LoadingIcon from "./icons/LoadingIcon.vue";
-
-/** @type {Array<{ Category: string, Subreddit: string, Description?: string }>} */
-let TAG_DATA = null;
+import { loadMusicSubreddits } from "../utils/reddit.js";
 
 export default {
   name: "TagExplorer",
@@ -54,6 +51,18 @@ export default {
       loading: false,
       groupedData: {}, // Holds the grouped data by category
     };
+  },
+
+  watch: {
+    async activeSubreddit(newValue) {
+      if (!newValue) return;
+
+      await this.$nextTick();
+      this.$el.querySelector("a.active")?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    },
   },
 
   methods: {
@@ -76,16 +85,8 @@ export default {
   async mounted() {
     this.loading = true;
 
-    // load csv from file
-    if (!TAG_DATA) {
-      const response = await fetch("Reddit Music Subreddits.csv");
-      const text = await response.text();
-      /** @type {Array<{ Category: string, Subreddit: string, Description?: string }>} */
-      TAG_DATA = csvParse(text);
-    }
-
     // Group data by Category
-    this.groupedData = groupBy(TAG_DATA, "Category");
+    this.groupedData = groupBy(await loadMusicSubreddits(), "Category");
 
     this.loading = false;
   },

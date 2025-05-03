@@ -116,6 +116,7 @@
       <component
         v-if="
           activeSongInfoComponent &&
+          playerQueue.activeSong &&
           ((playerQueue.activeSong.extra_links &&
             playerQueue.activeSong.extra_links.find((l) =>
               l.includes('reddit.com')
@@ -173,7 +174,7 @@ import RedditQueueControls from "./components/QueueProviderSongInfo/RedditQueueC
 
 // Other
 import { speak, getBestVoice } from "./utils/speech.js";
-import { pollUntilTruthy } from "./utils/utils.js";
+import { loadMusicSubreddits } from "./utils/reddit.js";
 import { getSettings, saveSettings } from "./models/Settings.js";
 import ImportPane, { importers } from "./components/ImportPane.vue";
 import SettingsPane from "./components/Settings/SettingsPane.vue";
@@ -306,6 +307,24 @@ export default {
   },
 
   async mounted() {
+    window.addEventListener("hashchange", () => {
+      const hash = location.hash.replace("#", "");
+      if (hash === "explore") {
+        this.openSidebar = "explore";
+      } else {
+        this.openSidebar = null;
+      }
+    });
+
+    window.addEventListener("popstate", async (ev) => {
+      console.log("History::popstate", ev);
+      const urlParams = new URLSearchParams(window.location.search);
+      const url = urlParams.get("url");
+      if (url) {
+        await this.handleUrlChange(url, false);
+      }
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     const shareParam = urlParams.get("share-lzma");
     const shareObj = shareParam
@@ -331,6 +350,7 @@ export default {
       } = await importers.url(
         urlParams.get("url")
       );
+      document.title = `anyqueue | ${urlParams.get("url")}`;
       this.queueProvider = provider;
       this.activeSongInfoComponent = activeSongInfoComponent;
       songs = urlSongs;
@@ -383,27 +403,12 @@ export default {
 
   methods: {
     async chooseRandomSubreddit() {
-      // first open the explore sidebar
-      const wasAlreadyOpen = this.openSidebar === "explore";
-      this.openSidebar = "explore";
-      await pollUntilTruthy(() => this.$el.querySelector('.tag-explorer a'));
-      const links = Array.from(
-        this.$el.querySelectorAll(".tag-explorer a")
-      );
-      const link = sample(links);
-
-      if (!wasAlreadyOpen) {
-        this.openSidebar = null;
-      } else {
-        link.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-
-      await this.handleUrlChange(new URL(link.href).searchParams.get("url"));
+      const subreddits = await loadMusicSubreddits();
+      const chosen = sample(subreddits);
+      await this.handleUrlChange(chosen.Subreddit);
     },
-    async handleUrlChange(url) {
+
+    async handleUrlChange(url, pushState = true) {
       console.log("URL", url);
       let songs = this.songs;
       const {
@@ -411,6 +416,16 @@ export default {
         provider = null,
         songs: urlSongs,
       } = await importers.url(url);
+
+      document.title = `anyqueue | ${url}`;
+
+      // push to history
+      if (pushState) {
+        const newAnyQueueUrl = `${window.location.pathname}?url=${encodeURIComponent(url).replace(/%2F/g, "/")}${location.hash}`;
+        console.log("History::pushState", newAnyQueueUrl);
+        history.pushState(null, "", newAnyQueueUrl);
+      }
+
       this.queueProvider = provider;
       this.activeSongInfoComponent = activeSongInfoComponent;
       songs = urlSongs;

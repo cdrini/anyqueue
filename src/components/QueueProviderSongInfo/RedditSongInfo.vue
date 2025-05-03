@@ -1,6 +1,12 @@
+<!--
+  Specifying key forces the iframe to be fully destroyed/recreated. Otherwise
+  changing the src of the iframe acts like a navigation, causing issues with
+  back button navigation.
+-->
 <template>
   <iframe
     class="reddit-song-info"
+    :key="url"
     :src="embedUrl"
   />
 </template>
