@@ -22,6 +22,17 @@ export class RedditQueueProvider {
     this.time = urlParts.time;
   }
 
+  updateUrl() {
+    let url = `${this.subreddit}`;
+    if (this.sort && this.sort !== 'best') {
+      url += `/${this.sort}`;
+    }
+    if (this.time && this.sort === 'top') {
+      url += `?t=${this.time}`;
+    }
+    return url;
+  }
+
   /**
    * @param {string} url
    * @returns {{ subreddit: string, sort: 'best' | 'hot' | 'new' | 'rising' } | 
@@ -48,7 +59,7 @@ export class RedditQueueProvider {
       case 'rising':
         return { subreddit, sort };
       case 'top':
-        return { subreddit, sort, time: time || 'all' };
+        return { subreddit, sort, time: time || 'hour' };
       default:
         return {subreddit}
     }

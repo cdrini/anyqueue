@@ -40,7 +40,8 @@
       "eslint:recommended"
     ],
     "rules": {
-      "vue/multi-word-component-names": "warn"
+      "vue/multi-word-component-names": "warn",
+      "vue/no-mutating-props": "warn"
     },
     "parserOptions": {
       "parser": "@babel/eslint-parser",

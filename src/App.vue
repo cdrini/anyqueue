@@ -28,18 +28,11 @@
         @close="openPane = null"
       />
 
-      <div
+      <RedditQueueControls
         v-if="queueProvider && queueProvider.name == 'reddit'"
-        class="reddit-header"
-      >
-        <header>
-          <img src="https://reddit.com/favicon.ico">
-          <a class="reddit-header__title naked-button" :href="queueProvider.fullUrl" target="_blank">
-            {{ queueProvider.subreddit }}
-            <b-icon-box-arrow-up-right />
-          </a>
-        </header>
-      </div>
+        :queueProvider="queueProvider"
+        @urlChange="handleUrlChange"
+      />
 
       <details v-if="urlParams.get('debug') === 'true'">
         <summary>Share/Export</summary>
@@ -150,6 +143,9 @@ import { GoogleDriveProvider } from "./models/SongProviders/GoogleDriveProvider.
 import { AudioMackProvider } from "./models/SongProviders/AudioMackProvider.js";
 import { RedditProvider } from "./models/SongProviders/RedditProvider.js";
 
+// Queue Providers
+import RedditQueueControls from "./components/QueueProviderSongInfo/RedditQueueControls.vue";
+
 // Other
 import { speak, getBestVoice } from "./utils/speech.js";
 import { getSettings, saveSettings } from "./models/Settings.js";
@@ -241,6 +237,7 @@ export default {
     Playlist,
     PlayToolbar,
     PlayerShell,
+    RedditQueueControls,
     SettingsPane,
     YouTubePlayer,
   },
@@ -341,6 +338,11 @@ export default {
   },
 
   methods: {
+    handleUrlChange(url) {
+      const newAppUrl = new URL(window.location);
+      newAppUrl.searchParams.set("url", url);
+      window.location = newAppUrl.href.replace(/url=[^&]+/, "url=" + url.replace(/%2F/g, "/"));
+    },
     togglePane(pane) {
       if (this.openPane === pane) {
         this.openPane = null;
@@ -711,32 +713,5 @@ body {
 .aq-dialog > header > h2 {
   font-size: 16px;
   margin: 0;
-}
-
-
-.reddit-header {
-  background: #ff440047;
-  margin: 10px;
-  border-radius: 10px;
-  padding: 10px;
-  overflow: hidden;
-  overflow: clip;
-}
-
-.reddit-header > header {
-  display: flex;
-  align-items: center;
-}
-
-.reddit-header > header > img {
-  pointer-events: none;
-  transform: scale(2);
-  mix-blend-mode: multiply;
-  opacity: 0.4;
-}
-
-.reddit-header__title {
-  color: inherit;
-  text-decoration: none;
 }
 </style>
