@@ -178,7 +178,7 @@ export class RedditQueueProvider {
             if (sm.type == 'youtube.com') {
               song.link = `https://youtube.com/watch?v=${sm.oembed.html.match(/\/embed\/([^?]+)/)[1]}`;
             }
-            else if (sm.type == 'm.youtube.com') {
+            else if (sm.type == 'm.youtube.com' && sm.oembed.url) {
               song.link = `https://youtube.com/watch?v=${new URL(sm.oembed.url).searchParams.get('v')}`;
             }
             else if (sm.type == 'soundcloud.com') {
