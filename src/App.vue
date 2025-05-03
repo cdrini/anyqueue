@@ -4,8 +4,11 @@
       <div class="app-bar">
         <img src="@/assets/favicon.svg" class="app-bar__logo" />
         <h1>AnyQueue</h1>
-        <button class="naked-button" title="Import..." @click="togglePane('explore')" :class="{ active: openPane == 'explore' }">
+        <button class="naked-button" @click="togglePane('explore')" :class="{ active: openPane == 'explore' }">
           Explore
+        </button>
+        <button class="naked-button" title="Random" @click="chooseRandomSubreddit">
+          <DiceIcon />
         </button>
         <div style="flex: 1" />
         <div>
@@ -124,6 +127,7 @@
 </template>
 
 <script>
+import { sample } from "lodash";
 import jsonUrl from "json-url";
 import Vue from "vue";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
@@ -159,10 +163,12 @@ import RedditQueueControls from "./components/QueueProviderSongInfo/RedditQueueC
 
 // Other
 import { speak, getBestVoice } from "./utils/speech.js";
+import { pollUntilTruthy } from "./utils/utils.js";
 import { getSettings, saveSettings } from "./models/Settings.js";
 import ImportPane, { importers } from "./components/ImportPane.vue";
 import SettingsPane from "./components/Settings/SettingsPane.vue";
 import TagExplorer from "./components/TagExplorer.vue";
+import DiceIcon from "./components/icons/DiceIcon.vue";
 
 // Types
 /** @typedef {import('@/src/models/Types.ts').QueueProvider} QueueProvider */
@@ -245,6 +251,7 @@ async function processSongs(songs, activeIndex) {
 export default {
   name: "App",
   components: {
+    DiceIcon,
     ImportPane,
     Playlist,
     PlayToolbar,
@@ -351,6 +358,16 @@ export default {
   },
 
   methods: {
+    async chooseRandomSubreddit() {
+      // first open the explore pane
+      this.openPane = "explore";
+      await pollUntilTruthy(() => this.$el.querySelector('.tag-explorer a'));
+      const links = Array.from(
+        this.$el.querySelectorAll(".tag-explorer a")
+      ).map((a) => a.href);
+
+      window.location.href = sample(links);
+    },
     handleUrlChange(url) {
       const newAppUrl = new URL(window.location);
       newAppUrl.searchParams.set("url", url);
@@ -554,7 +571,6 @@ body {
   display: flex;
   align-items: center;
   background: var(--aq-main-weak);
-  gap: 10px;
   overflow: hidden;
   overflow: clip;
   height: 40px;
