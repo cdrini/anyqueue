@@ -44,7 +44,16 @@
       <TagExplorer
         v-if="openSidebar == 'explore'"
         :active-subreddit="queueProvider && queueProvider.name == 'reddit' && queueProvider.subreddit"
-      />
+        @subreddit-selected="handleUrlChange"
+      >
+        <template v-slot:footer>
+          <RedditQueueControls
+            v-if="queueProvider && queueProvider.name == 'reddit'"
+            :queueProvider="queueProvider"
+            @urlChange="handleUrlChange"
+          />
+        </template>
+      </TagExplorer>
 
       <Playlist
         class="playlist"
@@ -375,18 +384,45 @@ export default {
   methods: {
     async chooseRandomSubreddit() {
       // first open the explore sidebar
+      const wasAlreadyOpen = this.openSidebar === "explore";
       this.openSidebar = "explore";
       await pollUntilTruthy(() => this.$el.querySelector('.tag-explorer a'));
       const links = Array.from(
         this.$el.querySelectorAll(".tag-explorer a")
-      ).map((a) => a.href);
+      );
+      const link = sample(links);
 
-      window.location.href = sample(links);
+      if (!wasAlreadyOpen) {
+        this.openSidebar = null;
+      } else {
+        link.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+
+      await this.handleUrlChange(new URL(link.href).searchParams.get("url"));
     },
-    handleUrlChange(url) {
-      const newAppUrl = new URL(window.location);
-      newAppUrl.searchParams.set("url", url);
-      window.location = newAppUrl.href.replace(/url=[^&]+/, "url=" + url.replace(/%2F/g, "/"));
+    async handleUrlChange(url) {
+      console.log("URL", url);
+      let songs = this.songs;
+      const {
+        activeSongInfoComponent,
+        provider = null,
+        songs: urlSongs,
+      } = await importers.url(url);
+      this.queueProvider = provider;
+      this.activeSongInfoComponent = activeSongInfoComponent;
+      songs = urlSongs;
+
+      await processSongs(songs, 0);
+      this.songs = songs;
+      this.playerQueue.load(this.songs);
+
+      // Start playing!
+      if (!this.playerQueue.started) {
+        this.start();
+      }
     },
     toggleSidebar(sidebar) {
       if (this.openSidebar === sidebar) {

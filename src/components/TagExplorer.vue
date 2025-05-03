@@ -4,7 +4,7 @@
       <LoadingIcon style="width: 48px; height: 48px;" />
     </div>
     <div v-else>
-      <div v-for="(subreddits, category) in groupedData" :key="category">
+      <div v-for="(subreddits, category) in groupedData" :key="category" @click="handleSubredditClick">
         <h3>{{ category }}</h3>
         <ul>
           <li
@@ -20,6 +20,9 @@
             </a>
           </li>
         </ul>
+      </div>
+      <div class="tag-explorer__footer">
+        <slot name="footer" />
       </div>
     </div>
   </div>
@@ -51,6 +54,23 @@ export default {
       loading: false,
       groupedData: {}, // Holds the grouped data by category
     };
+  },
+
+  methods: {
+    /**
+     * @param {MouseEvent} event
+     */
+    handleSubredditClick(event) {
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        return; // Do nothing if any modifier keys are pressed
+      }
+      const a = event.target.closest("a");
+      if (a) {
+        event.preventDefault();
+        const subreddit = a.getAttribute("href").split("=")[1];
+        this.$emit("subreddit-selected", subreddit);
+      }
+    },
   },
 
   async mounted() {
@@ -138,4 +158,25 @@ export default {
   pointer-events: none;
 }
 
+.tag-explorer__footer {
+  position: sticky;
+  bottom: 0px;
+  z-index: 10;
+  animation: slideUp 0.3s;
+  background: #f4f9fd;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.tag-explorer__footer .reddit-header {
+  margin: 0;
+  border-radius: 0;
+}
 </style>
