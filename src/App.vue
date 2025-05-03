@@ -310,6 +310,10 @@ export default {
 
     let songs = this.songs;
 
+    if (location.hash == "#explore") {
+      this.openSidebar = "explore";
+    }
+
     if (urlParams.has("url")) {
       const {
         activeSongInfoComponent,
@@ -336,6 +340,13 @@ export default {
     this.playerQueue.load(this.songs);
   },
   watch: {
+    openSidebar(val) {
+      if (val) {
+        location.hash = val;
+      } else {
+        location.hash = "";
+      }
+    },
     songs(val) {
       localStorage["App::songs"] = JSON.stringify(val);
     },
