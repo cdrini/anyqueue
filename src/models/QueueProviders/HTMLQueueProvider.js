@@ -1,7 +1,10 @@
+// @ts-check
 import uniqBy from "lodash/uniqBy";
+/** @typedef {import('@/src/models/Types.ts').QueueProvider} QueueProvider */
 
 /**
- * @param {string} html 
+ * @param {string} html
+ * @return {import('@/src/models/Types.ts').Song[]}
  */
 export function extractSongsFromHtml(html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
@@ -28,6 +31,7 @@ export function extractSongsFromHtml(html) {
 
 /**
  * Extracts songs from links in a generic HTML document.
+ * @implements {QueueProvider}
  */
 export class HTMLQueueProvider {
   /**

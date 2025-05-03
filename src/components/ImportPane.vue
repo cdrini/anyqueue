@@ -51,15 +51,15 @@ import { extractSongsFromHtml } from "../models/QueueProviders/HTMLQueueProvider
 // Queue Providers
 import { HTMLQueueProvider } from "../models/QueueProviders/HTMLQueueProvider.js";
 import { RedditQueueProvider } from "../models/QueueProviders/RedditQueueProvider.js";
-import ReddigtSongInfo from "./QueueProviderSongInfo/RedditSongInfo.vue";
+import RedditSongInfo from "./QueueProviderSongInfo/RedditSongInfo.vue";
 
 const QUEUE_PROVIDERS = [
-  { provider: new RedditQueueProvider(), songInfo: ReddigtSongInfo },
+  { provider: new RedditQueueProvider(), songInfo: RedditSongInfo },
   { provider: new HTMLQueueProvider() },
 ];
 
 /**
- * @type {Record<'html' | 'text' | 'csv' | 'url', (data: string) => Promise<{ format: string, data: string, queueProviderComponent: any, songs: import('../models/Song').Song[] }>>}
+ * @type {Record<'html' | 'text' | 'csv' | 'url', (data: string) => Promise<{ format: string, data: string, activeSongInfoComponent: any, songs: import('../models/Song').Song[] }>>}
  */
 export const importers = {
   async url(url) {
@@ -69,7 +69,7 @@ export const importers = {
     return {
       format: "url",
       data: url,
-      queueProviderComponent: songInfo,
+      activeSongInfoComponent: songInfo,
       songs: await provider.extract(url),
     };
   },
@@ -77,7 +77,7 @@ export const importers = {
     return {
       format: "html",
       data: html,
-      queueProviderComponent: null,
+      activeSongInfoComponent: null,
       songs: extractSongsFromHtml(html),
     };
   },
@@ -85,7 +85,7 @@ export const importers = {
     return {
       format: "text",
       data: text,
-      queueProviderComponent: null,
+      activeSongInfoComponent: null,
       songs: text
         .trim()
         .split("\n")
@@ -97,7 +97,7 @@ export const importers = {
     return {
       format: "csv",
       data: csv,
-      queueProviderComponent: null,
+      activeSongInfoComponent: null,
       songs: csvParse("title,artist,link\n" + csv),
     };
   },

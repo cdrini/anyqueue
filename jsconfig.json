@@ -1,7 +1,19 @@
 {
     "compilerOptions": {
-        // ...
+        "paths": {
+            "@/*": [
+                "./*"
+            ]
+        }
     },
+    "include": [
+        "src/**/*.js",
+        "src/**/*.ts",
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+    ],
     "vueCompilerOptions": {
         "target": 2.7,
     }

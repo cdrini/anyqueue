@@ -1,10 +1,13 @@
 // @ts-check
 import flatMap from "lodash/flatMap";
 import { extractSongsFromHtml } from "./HTMLQueueProvider.js";
+/** @typedef {import('../Types.ts').QueueProvider} QueueProvider */
 
+/**
+ * @implements {QueueProvider}
+ */
 export class RedditQueueProvider {
   /**
-   * 
    * @param {string} url 
    */
   testUrl(url) {
@@ -41,6 +44,8 @@ export class RedditQueueProvider {
 
   /**
    * @param {string} url
+   * @param {object} opts
+   * @param {function(string): import('@/src/models/Types.ts').Song[]} [opts.htmlExtractor]
    */
   async extract(url, { htmlExtractor = extractSongsFromHtml } = {}) {
     if (url.startsWith("/r/")) {
@@ -75,6 +80,7 @@ export class RedditQueueProvider {
         : // eg https://www.reddit.com/r/Songwriting/.json
           doc.data.children;
 
+    /** @type {import('@/src/models/Types.ts').Song[]} */
     let songs = [];
     // Processing a list of posts
     if (toProcess[0].kind == 't3') {
@@ -94,6 +100,7 @@ export class RedditQueueProvider {
             if (sm.oembed.html) {
               sm.oembed.html = sm.oembed.html.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
             }
+            /** @type {import('@/src/models/Types.ts').Song} */
             const song = {
               title: post.data.title,
               artist: post.data.author,
@@ -125,6 +132,7 @@ export class RedditQueueProvider {
           }
           else {
             console.error('Unknown secure media', sm);
+            return null; // FIXME
           }
         }
         else {

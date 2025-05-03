@@ -1,3 +1,6 @@
+/**
+ * Manages the queue of songs for the player.
+ */
 export class PlayerQueue {
   constructor(songs = []) {
     this.activeSongIndex = 0;

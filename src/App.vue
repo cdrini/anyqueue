@@ -85,7 +85,7 @@
       />
       <component
         v-if="
-          queueProviderComponent &&
+          activeSongInfoComponent &&
           ((playerQueue.activeSong.extra_links &&
             playerQueue.activeSong.extra_links.find((l) =>
               l.includes('reddit.com')
@@ -93,7 +93,7 @@
             playerQueue.activeSong.link?.includes?.('reddit.com'))
         "
         class="queue-provider-song-info"
-        :is="queueProviderComponent"
+        :is="activeSongInfoComponent"
         :url="
           playerQueue.activeSong.link?.includes?.('reddit.com')
             ? playerQueue.activeSong.link
@@ -231,7 +231,7 @@ export default {
     return {
       openPane: null,
 
-      queueProviderComponent: null,
+      activeSongInfoComponent: null,
       songs: [],
 
       shareLink: null,
@@ -270,10 +270,10 @@ export default {
     let songs = this.songs;
 
     if (urlParams.has("url")) {
-      const { queueProviderComponent, songs: urlSongs } = await importers.url(
+      const { activeSongInfoComponent, songs: urlSongs } = await importers.url(
         urlParams.get("url")
       );
-      this.queueProviderComponent = queueProviderComponent;
+      this.activeSongInfoComponent = activeSongInfoComponent;
       songs = urlSongs;
     }
 
@@ -323,8 +323,8 @@ export default {
         this.openPane = pane;
       }
     },
-    async reloadSongs({ queueProviderComponent, songs }) {
-      this.queueProviderComponent = queueProviderComponent;
+    async reloadSongs({ activeSongInfoComponent, songs }) {
+      this.activeSongInfoComponent = activeSongInfoComponent;
       await processSongs(songs, 0);
       this.songs = songs.filter((s) => s.provider);
       this.playerQueue.load(this.songs);
