@@ -29,9 +29,9 @@
           </li>
         </ul>
       </div>
-      <div class="tag-explorer__footer">
-        <slot name="footer" />
-      </div>
+    </div>
+    <div class="tag-explorer__footer">
+      <slot name="footer" />
     </div>
   </div>
 </template>
