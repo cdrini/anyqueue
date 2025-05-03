@@ -175,8 +175,9 @@ export class RedditQueueProvider {
               oembed: sm.oembed,
               extra_links: [`https://www.reddit.com${post.data.permalink}`],
             };
-            if (sm.type == 'youtube.com') {
-              song.link = `https://youtube.com/watch?v=${sm.oembed.html.match(/\/embed\/([^?]+)/)[1]}`;
+            let m = null;
+            if (sm.type == 'youtube.com' && (m = sm.oembed.html.match(/\/embed\/([^?]+)/))) {
+              song.link = `https://youtube.com/watch?v=${m[1]}`;
             }
             else if (sm.type == 'm.youtube.com' && sm.oembed.url) {
               song.link = `https://youtube.com/watch?v=${new URL(sm.oembed.url).searchParams.get('v')}`;
