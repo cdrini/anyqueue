@@ -643,6 +643,7 @@ body {
 .app-bar {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   background: var(--aq-main-weak);
   overflow: hidden;
   overflow: clip;
