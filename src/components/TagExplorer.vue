@@ -8,7 +8,12 @@
         v-for="(subreddits, category) in (display == 'grouped' ? groupedData : {'All': subredditsSorted})"
         :key="category"
       >
-        <h3 v-if="display == 'grouped'">{{ category }}</h3>
+        <h3 v-if="display == 'grouped'">
+          {{ category }}
+          <button class="naked-button" title="Random" @click="chooseRandomSubreddit(subreddits)">
+            <DiceIcon />
+          </button>
+        </h3>
         <ul>
           <li
             v-for="subreddit in subreddits"
@@ -32,13 +37,15 @@
 </template>
 
 <script>
-import { sortBy, uniqBy } from "lodash";
+import { sample, sortBy, uniqBy } from "lodash";
+import DiceIcon from "./icons/DiceIcon.vue";
 import LoadingIcon from "./icons/LoadingIcon.vue";
 import { loadMusicSubreddits } from "../utils/reddit.js";
 
 export default {
   name: "TagExplorer",
   components: {
+    DiceIcon,
     LoadingIcon,
   },
 
@@ -77,7 +84,9 @@ export default {
       for (const subreddit of this.subreddits) {
         if (subreddit.Category == 'Redditor-made music') {
           result['Redditor-made music'].push(subreddit);
-        } else if ([
+        }
+
+        if ([
           '/r/Music',
           '/r/ListenToThis',
         ].includes(subreddit.Subreddit)) {
@@ -105,6 +114,10 @@ export default {
   },
 
   methods: {
+    chooseRandomSubreddit(subreddits) {
+      const randomSubreddit = sample(subreddits);
+      this.$emit("subreddit-selected", randomSubreddit.Subreddit);
+    },
     /**
      * @param {MouseEvent} event
      */
@@ -142,17 +155,28 @@ export default {
   overflow-y: auto;
 }
 .tag-explorer h3 {
-  font-size: 18px;
+  font-size: 12px;
   position: sticky;
   top: 0;
-  background: #f4f9fd;
-  border-bottom: 1px solid #ccc;
+  background: linear-gradient(var(--aq-main-weak), transparent calc(100% - 10px));
   z-index: 1;
-  padding: 10px;
+  padding: 0 10px;
+  color: var(--aq-main-dark);
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  padding-bottom: 10px;
+  clip-path: inset(0 0 10px 0);
+  margin-bottom: -10px;
+  text-transform: uppercase;
 }
+.tag-explorer h3 button {
+  color: inherit;
+}
+
 .tag-explorer ul {
   padding: 0;
-  margin: 0;
+  margin: 5px 0 15px 0;
   text-align: center;
 }
 .tag-explorer li {
