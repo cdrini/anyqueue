@@ -3,9 +3,12 @@
     <div v-if="loading" style="text-align: center; padding: 20px;">
       <LoadingIcon style="width: 48px; height: 48px;" />
     </div>
-    <div v-else>
-      <div v-for="(subreddits, category) in groupedData" :key="category" @click="handleSubredditClick">
-        <h3>{{ category }}</h3>
+    <div v-else @click="handleSubredditClick">
+      <div
+        v-for="(subreddits, category) in (display == 'grouped' ? groupedData : {'All': subredditsSorted})"
+        :key="category"
+      >
+        <h3 v-if="display == 'grouped'">{{ category }}</h3>
         <ul>
           <li
             v-for="subreddit in subreddits"
@@ -29,7 +32,7 @@
 </template>
 
 <script>
-import { groupBy } from "lodash";
+import { sortBy, uniqBy } from "lodash";
 import LoadingIcon from "./icons/LoadingIcon.vue";
 import { loadMusicSubreddits } from "../utils/reddit.js";
 
@@ -49,8 +52,44 @@ export default {
   data() {
     return {
       loading: false,
-      groupedData: {}, // Holds the grouped data by category
+
+      /** @type {'flat' | 'grouped'} */
+      display: 'grouped',
+
+      /** @type {Array<{ Category: string, Subreddit: string, Description: string }>} */
+      subreddits: [],
     };
+  },
+
+  computed: {
+    subredditsSorted() {
+      return uniqBy(
+        sortBy(this.subreddits, s => s.Subreddit.toLowerCase()),
+        s => s.Subreddit.toLowerCase()
+      );
+    },
+    groupedData() {
+      const result = {
+        'Popular': [],
+        'Redditor-made music': [],
+        'All': this.subredditsSorted,
+      };
+      for (const subreddit of this.subreddits) {
+        if (subreddit.Category == 'Redditor-made music') {
+          result['Redditor-made music'].push(subreddit);
+        } else if ([
+          '/r/Music',
+          '/r/ListenToThis',
+        ].includes(subreddit.Subreddit)) {
+          result['Popular'].push(subreddit);
+        }
+      }
+      //uniq Popular and Redditor-made music
+      result['Popular'] = uniqBy(result['Popular'], s => s.Subreddit.toLowerCase());
+      result['Redditor-made music'] = uniqBy(result['Redditor-made music'], s => s.Subreddit.toLowerCase());
+
+      return result;
+    },
   },
 
   watch: {
@@ -84,11 +123,16 @@ export default {
 
   async mounted() {
     this.loading = true;
-
-    // Group data by Category
-    this.groupedData = groupBy(await loadMusicSubreddits(), "Category");
-
+    this.subreddits = await loadMusicSubreddits();
     this.loading = false;
+
+    if (this.activeSubreddit) {
+      await this.$nextTick();
+      this.$el.querySelector("a.active")?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
   },
 };
 </script>

@@ -432,7 +432,7 @@ export default {
 
       await processSongs(songs, 0);
       this.songs = songs;
-      this.playerQueue.load(this.songs);
+      this.playerQueue.load(this.songs, this.songs.findIndex((s) => s.unavailable !== true));
 
       // Start playing!
       if (!this.playerQueue.started) {
