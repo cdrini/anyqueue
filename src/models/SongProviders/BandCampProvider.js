@@ -5,7 +5,7 @@ export class BandCampProvider extends SongProvider {
   constructor() {
     super();
     this.name = "BandCamp";
-    this.iconUrl = "https://bandcamp.com/favicon.ico";
+    this.iconUrl = "https://s4.bcbits.com/img/favicon/favicon-32x32.png";
   }
 
   /**
