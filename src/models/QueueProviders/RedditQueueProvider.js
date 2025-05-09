@@ -165,9 +165,6 @@ export class RedditQueueProvider {
             }
           }
           else if ('type' in sm) {
-            if (sm.oembed.html) {
-              sm.oembed.html = sm.oembed.html.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-            }
             /** @type {import('@/src/models/Types.ts').Song} */
             const song = {
               title: post.data.title,
@@ -175,24 +172,25 @@ export class RedditQueueProvider {
               oembed: sm.oembed,
               extra_links: [`https://www.reddit.com${post.data.permalink}`],
             };
-            let m = null;
-            if (sm.type == 'youtube.com' && (m = sm.oembed.html.match(/\/embed\/([^?]+)/))) {
-              song.link = `https://youtube.com/watch?v=${m[1]}`;
+            
+            if (sm.oembed.html) {
+              sm.oembed.html = sm.oembed.html.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+
+              const iframeSrc = new URL(sm.oembed.html.match(/src="([^"]+)"/)[1]);
+              const normalizedLink = getAudioLink(iframeSrc);
+              if (normalizedLink) {
+                song.link = normalizedLink;
+              }
             }
-            else if (sm.type == 'm.youtube.com' && sm.oembed.url) {
-              song.link = `https://youtube.com/watch?v=${new URL(sm.oembed.url).searchParams.get('v')}`;
-            }
-            else if (sm.type == 'soundcloud.com') {
+            if (sm.type == 'soundcloud.com') {
               // Not sure if this handles soundcloud.app links
               song.link = post.data.url_overridden_by_dest;
             }
-            else if (sm.type == 'audiomack.com') {
+            if (sm.type == 'audiomack.com') {
               song.link = sm.oembed.url;
             }
-            else if (sm.type == 'open.spotify.com') {
-              song.link = new URL(sm.oembed.html.match(/src="([^"]+)"/)[1]).searchParams.get('src').replace('/embed', '');
-            }
-            else {
+            
+            if (!song.link) {
               song.unavailable = true;
               song.warnings = song.warnings || [];
               song.warnings.push('cannot embed');
@@ -249,5 +247,38 @@ export class RedditQueueProvider {
     }
 
     return songs;
+  }
+}
+
+/**
+ * @param {URL} url
+ * @returns {string}
+ */
+function getAudioLink(url) {
+  if (url.hostname == "youtube.com" || url.hostname == "www.youtube.com" || url.hostname == "m.youtube.com") {
+    let videoId = null;
+    if (url.searchParams.has("v")) {
+      videoId = url.searchParams.get("v");
+    } else if (url.pathname.startsWith("/embed/")) {
+      videoId = url.pathname.split("/")[2];
+    }
+
+    if (videoId) {
+      return `https://www.youtube.com/watch?v=${videoId}`;
+    } else {
+      return null;
+    }
+  }
+
+  else if (url.hostname == "open.spotify.com") {
+    return url.toString().replace('/embed', '');
+  }
+
+  else if (url.hostname == "cdn.embedly.com") {
+    return getAudioLink(new URL(url.searchParams.get('src')));
+  }
+
+  else {
+    return null;
   }
 }
