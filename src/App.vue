@@ -55,6 +55,10 @@
         </template>
       </TagExplorer>
 
+      <div v-else-if="loadingSongs" style="flex: 1; display: flex; align-items: center; justify-content: center;">
+        <LoadingIcon style="width: 48px; height: 48px;" />
+      </div>
+
       <Playlist
         class="playlist"
         v-else
@@ -180,6 +184,7 @@ import ImportPane, { importers } from "./components/ImportPane.vue";
 import SettingsPane from "./components/Settings/SettingsPane.vue";
 import TagExplorer from "./components/TagExplorer.vue";
 import DiceIcon from "./components/icons/DiceIcon.vue";
+import LoadingIcon from "./components/icons/LoadingIcon.vue";
 
 // Types
 /** @typedef {import('@/src/models/Types.ts').QueueProvider} QueueProvider */
@@ -264,6 +269,7 @@ export default {
   components: {
     DiceIcon,
     ImportPane,
+    LoadingIcon,
     Playlist,
     PlayToolbar,
     PlayerShell,
@@ -284,6 +290,7 @@ export default {
       activeSongInfoComponent: null,
       /** @type {Song[]} */
       songs: [],
+      loadingSongs: false,
 
       shareLink: null,
       playerQueue: new PlayerQueue([]),
@@ -364,9 +371,11 @@ export default {
         SONGS;
     }
 
+    this.loadingSongs = true;
     await processSongs(songs, this.playerQueue.activeSongIndex);
     this.songs = songs;
     this.playerQueue.load(this.songs);
+    this.loadingSongs = false;
   },
   watch: {
     openSidebar(val) {
@@ -411,6 +420,7 @@ export default {
     async handleUrlChange(url, pushState = true) {
       console.log("URL", url);
       let songs = this.songs;
+      this.loadingSongs = true;
       const {
         activeSongInfoComponent,
         provider = null,
@@ -433,6 +443,7 @@ export default {
       await processSongs(songs, 0);
       this.songs = songs;
       this.playerQueue.load(this.songs, this.songs.findIndex((s) => s.unavailable !== true));
+      this.loadingSongs = false;
 
       // Start playing!
       if (!this.playerQueue.started) {
@@ -455,9 +466,11 @@ export default {
     },
     async reloadSongs({ activeSongInfoComponent, songs }) {
       this.activeSongInfoComponent = activeSongInfoComponent;
+      this.loadingSongs = true;
       await processSongs(songs, 0);
       this.songs = songs.filter((s) => s.provider);
       this.playerQueue.load(this.songs);
+      this.loadingSongs = false;
     },
     humanReadableWarning(song) {
       if (!song.player) {
