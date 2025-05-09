@@ -3,7 +3,9 @@ import { SongProvider } from "../SongProvider.js";
 
 export class BandCampProvider extends SongProvider {
   constructor() {
-    super({ name: "BandCamp" });
+    super();
+    this.name = "BandCamp";
+    this.iconUrl = "https://bandcamp.com/favicon.ico";
   }
 
   /**

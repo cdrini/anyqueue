@@ -2,7 +2,9 @@ import { SongProvider } from "../SongProvider.js";
 
 export class IAProvider extends SongProvider {
   constructor() {
-    super({ name: "Internet Archive" });
+    super();
+    this.name = "Internet Archive";
+    this.iconUrl = "https://archive.org/favicon.ico";
     this.base = "https://archive.org";
   }
 

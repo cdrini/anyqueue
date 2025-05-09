@@ -159,8 +159,8 @@ export class RedditQueueProvider {
           const sm = post.data.secure_media;
           if ('reddit_video' in sm) {
             return {
-              title: post.data.title,
-              artist: post.data.author,
+              title: post.data.title.replace(/&amp;/g, '&'),
+              artist: post.data.author.replace(/&amp;/g, '&'),
               link: `https://www.reddit.com${post.data.permalink}`,
               embed_link: sm.reddit_video.hls_url,
             }
@@ -168,8 +168,8 @@ export class RedditQueueProvider {
           else if ('type' in sm) {
             /** @type {import('@/src/models/Types.ts').Song} */
             const song = {
-              title: post.data.title,
-              artist: post.data.author,
+              title: post.data.title.replace(/&amp;/g, '&'),
+              artist: post.data.author.replace(/&amp;/g, '&'),
               oembed: sm.oembed,
               extra_links: [`https://www.reddit.com${post.data.permalink}`],
             };

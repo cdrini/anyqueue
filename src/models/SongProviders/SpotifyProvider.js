@@ -2,7 +2,9 @@ import { SongProvider } from "../SongProvider.js";
 
 export class SpotifyProvider extends SongProvider {
   constructor() {
-    super({ name: "Spotify" });
+    super();
+    this.name = "Spotify";
+    this.iconUrl = "https://open.spotify.com/favicon.ico";
   }
 
   /** @override */

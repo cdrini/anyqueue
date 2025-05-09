@@ -5,13 +5,11 @@
  * @abstract
  */
 export class SongProvider {
-  /**
-   * @param {object} param0
-   * @param {string} param0.name
-   */
-  constructor({ name }) {
-    this.name = name;
-  }
+  /** @type {string} */
+  name;
+  /** @type {string} */
+  iconUrl;
+
   /**
    * @abstract
    * @param {string} link

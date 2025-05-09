@@ -16,7 +16,19 @@
               <span class="chunky-button__label">Play</span>
             </button>
             <a
-              v-for="link in [song.link, ...(song.extra_links || [])].filter(x => x)"
+              class="chunky-button naked-anchor naked-button song-listing__view"
+              target="_blank"
+              :href="song.link"
+              @click.stop
+            >
+              <div>
+                <b-icon-box-arrow-up-right />
+                <img class="song-listing__favicon" :src="song.provider.iconUrl" />
+              </div>
+              <span class="chunky-button__label">View</span>
+            </a>
+            <a
+              v-for="link in (song.extra_links || [])"
               :key="link"
               class="chunky-button naked-anchor naked-button song-listing__view"
               target="_blank"
@@ -57,17 +69,7 @@ export default {
   methods: {
     getFavIcon(url) {
       const parsedUrl = new URL(url);
-      let host = parsedUrl.host;
-      // Strip subdomains to get the favicon
-      // Fixes on.soundcloud.com links
-      const stripped_subdomains = parsedUrl.host.match(/\.?([^.]+\.[^.]+)$/);
-      if (stripped_subdomains) {
-        host = stripped_subdomains[1];
-      }
-      if (host === "bandcamp.com") {
-        return 'https://s4.bcbits.com/img/favicon/favicon-32x32.png';
-      }
-      return `${parsedUrl.protocol}//${host}/favicon.ico`;
+      return `${parsedUrl.protocol}//${parsedUrl.host}/favicon.ico`;
     },
   },
 };

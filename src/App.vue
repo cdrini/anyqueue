@@ -226,7 +226,7 @@ async function processSongs(songs, activeIndex) {
     songs.map(async (s) => {
       s.active = false;
       const provider = SongProviderFactory.findForSong(s);
-      const player = PLAYERS[provider.constructor.name];
+      const player = PLAYERS[provider?.constructor?.name];
       if (provider && player) {
         s.provider = provider;
         s.player = player;

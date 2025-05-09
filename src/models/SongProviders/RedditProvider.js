@@ -2,7 +2,9 @@ import { SongProvider } from "../SongProvider.js";
 
 export class RedditProvider extends SongProvider {
   constructor() {
-    super({ name: "Reddit" });
+    super();
+    this.name = "Reddit";
+    this.iconUrl = "https://reddit.com/favicon.ico";
   }
 
   /** @override */

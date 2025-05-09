@@ -3,7 +3,9 @@ import { getIdFromUrl } from "vue-youtube";
 
 export class YouTubeProvider extends SongProvider {
   constructor() {
-    super({ name: "YouTube" });
+    super();
+    this.name = "YouTube";
+    this.iconUrl = "https://youtube.com/favicon.ico";
   }
   /** @override */
   testLink(link) {
@@ -50,8 +52,8 @@ export class YouTubeProvider extends SongProvider {
     }
 
     if (song.oembed) {
-      song.title = song.oembed.title;
-      song.artist = song.oembed.author_name;
+      song.title = song.oembed.title.replace(/&amp;/g, '&');
+      song.artist = song.oembed.author_name?.replace(/&amp;/g, '&');
       song.thumbnail_url = song.oembed.thumbnail_url;
     }
   }

@@ -2,7 +2,9 @@ import { SongProvider } from "../SongProvider.js";
 
 export class AudioMackProvider extends SongProvider {
   constructor() {
-    super({ name: "AudioMack" });
+    super();
+    this.name = "AudioMack";
+    this.iconUrl = "https://audiomack.com/favicon.ico";
   }
 
   /** @override */

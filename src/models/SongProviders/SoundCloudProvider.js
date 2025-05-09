@@ -2,7 +2,9 @@ import { SongProvider } from "../SongProvider.js";
 
 export class SoundCloudProvider extends SongProvider {
   constructor() {
-    super({ name: "SoundCloud" });
+    super();
+    this.name = "SoundCloud";
+    this.iconUrl = "https://soundcloud.com/favicon.ico";
   }
   /** @override */
   testLink(link) {
