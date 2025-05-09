@@ -1,5 +1,7 @@
 // @ts-check
 import uniqBy from "lodash/uniqBy";
+import { SongProviderFactory } from "../SongProviders/SongProviderFactory";
+
 /** @typedef {import('@/src/models/Types.ts').QueueProvider} QueueProvider */
 
 /**
@@ -10,9 +12,9 @@ export function extractSongsFromHtml(html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
   return uniqBy(
     Array.from(doc.querySelectorAll("a"))
-      .filter((a) => a.href && /\b(youtube\.com|youtu\.be|soundcloud\.com|audiomack\.com|open\.spotify\.com|archive\.org|drive\.google\.com)\b/i.test(a.href))
+      .filter((a) => a.href && SongProviderFactory.testLink(a.href))
       .map((a) => ({
-        link: a.href,
+        link: SongProviderFactory.normalizeLink(a.href.toString()),
         artist: "",
         title:
           a.textContent.trim() !== a.href
@@ -22,7 +24,7 @@ export function extractSongsFromHtml(html) {
       .concat(
         (html.match(/youtube.com\/embed\/[a-z0-9-_]+/gi) || [])
         .map(link => ({
-          link: 'https://' + link.replace('/embed/', '/watch?v='),
+          link: SongProviderFactory.normalizeLink(link),
           artist: '',
           title: ''
         }))

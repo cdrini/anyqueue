@@ -9,7 +9,7 @@ export class SoundCloudProvider extends SongProvider {
     return link.includes("soundcloud.com"); // || link.includes("soundcloud.app");
   }
 
-  async normalizeLink(link) {
+  normalizeLink(link) {
     // The API doesn't support CORS!!!
     // if (link.includes("soundcloud.app")) {
     //   let unshortened = { success: false };

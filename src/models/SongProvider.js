@@ -32,7 +32,7 @@ export class SongProvider {
   }
 
   /** @param {string} link */
-  async normalizeLink(link) {
+  normalizeLink(link) {
     return link;
   }
 

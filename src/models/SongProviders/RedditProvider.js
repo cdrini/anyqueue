@@ -6,6 +6,12 @@ export class RedditProvider extends SongProvider {
   }
 
   /** @override */
+  testLink(link) {  // eslint-disable-line no-unused-vars
+    // TODO
+    return false;
+  }
+
+  /** @override */
   testSong(song) {
     return song.embed_link && song.embed_link.includes('/v.redd.it/');
   }

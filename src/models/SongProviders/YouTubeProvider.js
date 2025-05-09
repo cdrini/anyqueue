@@ -10,13 +10,20 @@ export class YouTubeProvider extends SongProvider {
     return link.includes("youtube.com") || link.includes("youtu.be");
   }
 
-  async normalizeLink(link) {
-    if (link.includes("youtu.be")) {
-      const url = new URL(link);
-      const id = url.pathname.slice(1);
-      return `https://www.youtube.com/watch?v=${id}`;
+  /** @override */
+  normalizeLink(link) {
+    const url = new URL(link);
+    let videoId = null;
+
+    if (url.searchParams.has("v")) {
+      videoId = url.searchParams.get("v");
+    } else if (url.pathname.startsWith("/embed/")) {
+      videoId = url.pathname.split("/")[2];
+    } else if (url.hostname === "youtu.be") {
+      videoId = url.pathname.slice(1);
     }
-    return link;
+
+    return `https://www.youtube.com/watch?v=${videoId}`;
   }
 
   /**

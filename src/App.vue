@@ -165,15 +165,7 @@ import SpotifyPlayer from "./components/SongPlayer/SpotifyPlayer.vue";
 import RedditPlayer from "./components/SongPlayer/RedditPlayer.vue";
 
 // Providers
-import { YouTubeProvider } from "./models/SongProviders/YouTubeProvider.js";
-import { IAProvider } from "./models/SongProviders/IAProvider.js";
-import { SoundCloudProvider } from "./models/SongProviders/SoundCloudProvider.js";
-import { SpotifyProvider } from "./models/SongProviders/SpotifyProvider.js";
-import { GoogleDriveProvider } from "./models/SongProviders/GoogleDriveProvider.js";
-import { AudioMackProvider } from "./models/SongProviders/AudioMackProvider.js";
-import { RedditProvider } from "./models/SongProviders/RedditProvider.js";
-
-// Queue Providers
+import { SongProviderFactory } from "./models/SongProviders/SongProviderFactory.js";
 import RedditQueueControls from "./components/QueueProviderSongInfo/RedditQueueControls.vue";
 
 // Other
@@ -195,15 +187,15 @@ Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
 
-const PROVIDERS = [
-  { provider: new YouTubeProvider(), player: YouTubePlayer },
-  { provider: new IAProvider(), player: IAPlayer },
-  { provider: new SoundCloudProvider(), player: SoundCloudPlayer },
-  { provider: new SpotifyProvider(), player: SpotifyPlayer },
-  { provider: new GoogleDriveProvider(), player: GoogleDrivePlayer },
-  { provider: new AudioMackProvider(), player: AudioMackPlayer },
-  { provider: new RedditProvider(), player: RedditPlayer },
-];
+const PLAYERS = {
+  YouTubeProvider: YouTubePlayer,
+  IAProvider: IAPlayer,
+  SoundCloudProvider: SoundCloudPlayer,
+  SpotifyProvider: SpotifyPlayer,
+  GoogleDriveProvider: GoogleDrivePlayer,
+  AudioMackProvider: AudioMackPlayer,
+  RedditProvider: RedditPlayer,
+};
 
 const SONGS = [
   {
@@ -231,10 +223,10 @@ async function processSongs(songs, activeIndex) {
   await Promise.all(
     songs.map(async (s) => {
       s.active = false;
-      const provider = PROVIDERS.find((p) => p.provider.testSong(s));
+      const provider = SongProviderFactory.findForSong(s);
       if (provider) {
-        s.provider = provider.provider;
-        s.player = provider.player;
+        s.provider = provider;
+        s.player = PLAYERS[provider.constructor.name];
         s.warnings = s.warnings || [];
 
         if (s.player.supportsAutoplay === false) {
@@ -245,13 +237,13 @@ async function processSongs(songs, activeIndex) {
           s.warnings.push(`end events`);
         }
 
-        s.link = await s.provider.normalizeLink(s.link);
+        s.link = s.provider.normalizeLink(s.link);
         try {
           await s.provider.augmentMetadata(s);
         } catch (err) {
           // Assume the song is no longer available
           s.unavailable = true;
-          s.warnings.push("An error ocurred");
+          s.warnings.push("An error occurred");
         }
       }
     })

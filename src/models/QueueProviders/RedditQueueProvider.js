@@ -1,6 +1,7 @@
 // @ts-check
 import flatMap from "lodash/flatMap";
 import { extractSongsFromHtml } from "./HTMLQueueProvider.js";
+import { SongProviderFactory } from "../SongProviders/SongProviderFactory.js";
 /** @typedef {import('../Types.ts').QueueProvider} QueueProvider */
 
 /**
@@ -177,7 +178,7 @@ export class RedditQueueProvider {
               sm.oembed.html = sm.oembed.html.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
               const iframeSrc = new URL(sm.oembed.html.match(/src="([^"]+)"/)[1]);
-              const normalizedLink = getAudioLink(iframeSrc);
+              const normalizedLink = SongProviderFactory.normalizeLink(iframeSrc.toString());
               if (normalizedLink) {
                 song.link = normalizedLink;
               }
@@ -250,35 +251,3 @@ export class RedditQueueProvider {
   }
 }
 
-/**
- * @param {URL} url
- * @returns {string}
- */
-function getAudioLink(url) {
-  if (url.hostname == "youtube.com" || url.hostname == "www.youtube.com" || url.hostname == "m.youtube.com") {
-    let videoId = null;
-    if (url.searchParams.has("v")) {
-      videoId = url.searchParams.get("v");
-    } else if (url.pathname.startsWith("/embed/")) {
-      videoId = url.pathname.split("/")[2];
-    }
-
-    if (videoId) {
-      return `https://www.youtube.com/watch?v=${videoId}`;
-    } else {
-      return null;
-    }
-  }
-
-  else if (url.hostname == "open.spotify.com") {
-    return url.toString().replace('/embed', '');
-  }
-
-  else if (url.hostname == "cdn.embedly.com") {
-    return getAudioLink(new URL(url.searchParams.get('src')));
-  }
-
-  else {
-    return null;
-  }
-}

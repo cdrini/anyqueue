@@ -10,6 +10,11 @@ export class SpotifyProvider extends SongProvider {
     return link.includes("open.spotify.com");
   }
 
+  /** @override */
+  normalizeLink(link) {
+    return link.replace('/embed', '');
+  }
+
   async fetchOembed(url) {
     return fetch(
       `https://open.spotify.com/oembed?${new URLSearchParams({
