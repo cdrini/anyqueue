@@ -10,7 +10,7 @@ export function extractSongsFromHtml(html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
   return uniqBy(
     Array.from(doc.querySelectorAll("a"))
-      .filter((a) => a.href && /\b(youtube\.com|youtu\.be|soundcloud\.com|audiomack\.com|open\.spotify\.com|archive\.org)\b/i.test(a.href))
+      .filter((a) => a.href && /\b(youtube\.com|youtu\.be|soundcloud\.com|audiomack\.com|open\.spotify\.com|archive\.org|drive\.google\.com)\b/i.test(a.href))
       .map((a) => ({
         link: a.href,
         artist: "",
