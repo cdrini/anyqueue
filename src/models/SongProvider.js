@@ -1,4 +1,6 @@
-/* eslint-disable no-unused-vars */
+// @ts-check
+/** @typedef {import('@/src/models/Types.ts').Song} Song */
+
 /**
  * @abstract
  */
@@ -13,21 +15,21 @@ export class SongProvider {
   /**
    * @abstract
    * @param {string} link
-   * @returns {bool}
+   * @returns {boolean}
    */
-  testLink(link) {
+  testLink(link) {  // eslint-disable-line no-unused-vars
     throw new Error("Not Implemented");
   }
 
   /**
-   * @param {object} song
+   * @param {Song} song
    */
   testSong(song) {
     return this.testLink(song.link || '');
   }
 
   /** @param {string} link */
-  supported(link) {
+  supported(link) {  // eslint-disable-line no-unused-vars
     return true;
   }
 
@@ -37,12 +39,9 @@ export class SongProvider {
   }
 
   /**
-   * @param {object} song
-   * @param {string} [song.title]
-   * @param {string} [song.artist]
-   * @param {string} song.link
+   * @param {Song} song
    */
-  async augmentMetadata(song) {
+  async augmentMetadata(song) {  // eslint-disable-line no-unused-vars
     return;
   }
 }
