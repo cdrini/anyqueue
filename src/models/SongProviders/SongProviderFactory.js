@@ -5,6 +5,7 @@ import { SpotifyProvider } from "./SpotifyProvider.js";
 import { GoogleDriveProvider } from "./GoogleDriveProvider.js";
 import { AudioMackProvider } from "./AudioMackProvider.js";
 import { RedditProvider } from "./RedditProvider.js";
+import { BandCampProvider } from "./BandCampProvider.js";
 
 export class SongProviderFactory {
   /**
@@ -18,6 +19,7 @@ export class SongProviderFactory {
     new GoogleDriveProvider(),
     new AudioMackProvider(),
     new RedditProvider(),
+    new BandCampProvider(),
   ];
 
   /**

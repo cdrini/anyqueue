@@ -163,6 +163,7 @@ import GoogleDrivePlayer from "./components/SongPlayer/GoogleDrivePlayer";
 import AudioMackPlayer from "./components/SongPlayer/AudioMackPlayer";
 import SpotifyPlayer from "./components/SongPlayer/SpotifyPlayer.vue";
 import RedditPlayer from "./components/SongPlayer/RedditPlayer.vue";
+import BandCampPlayer from "./components/SongPlayer/BandCampPlayer.vue";
 
 // Providers
 import { SongProviderFactory } from "./models/SongProviders/SongProviderFactory.js";
@@ -195,6 +196,7 @@ const PLAYERS = {
   GoogleDriveProvider: GoogleDrivePlayer,
   AudioMackProvider: AudioMackPlayer,
   RedditProvider: RedditPlayer,
+  BandCampProvider: BandCampPlayer,
 };
 
 const SONGS = [
@@ -224,9 +226,10 @@ async function processSongs(songs, activeIndex) {
     songs.map(async (s) => {
       s.active = false;
       const provider = SongProviderFactory.findForSong(s);
-      if (provider) {
+      const player = PLAYERS[provider.constructor.name];
+      if (provider && player) {
         s.provider = provider;
-        s.player = PLAYERS[provider.constructor.name];
+        s.player = player;
         s.warnings = s.warnings || [];
 
         if (s.player.supportsAutoplay === false) {

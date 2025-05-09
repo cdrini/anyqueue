@@ -105,6 +105,15 @@ interface RedditPost extends RedditItem {
       }
     }
     | {
+      type: string,
+      oembed: Oembed & {
+        type: "rich"
+        provider_name: "BandCamp"
+        provider_url: "http://bandcamp.com"
+        description: string
+      }
+    }
+    | {
       reddit_video: {
         /** Link to .mp4 file without audio */
         fallback_url: string
