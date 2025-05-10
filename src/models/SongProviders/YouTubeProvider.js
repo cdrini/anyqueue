@@ -25,7 +25,11 @@ export class YouTubeProvider extends SongProvider {
       videoId = url.pathname.slice(1);
     }
 
-    return `https://www.youtube.com/watch?v=${videoId}`;
+    if (videoId) {
+      return `https://www.youtube.com/watch?v=${videoId}`;
+    } else {
+      return link;
+    }
   }
 
   /**

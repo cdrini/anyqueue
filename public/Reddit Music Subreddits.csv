@@ -193,12 +193,15 @@ Hip-hop,/r/backspin
 Hip-hop,/r/BayRap
 Hip-hop,/r/ChapHop
 Hip-hop,/r/ChiefKeef,"Chief Keef, GBE, drill, and more"
+Hip-hop,/r/CloudRap
 Hip-hop,/r/DrillandBop
 Hip-hop,/r/Emo_Trap
 Hip-hop,/r/Gfunk
+Hip-hop,/r/hiphop
 Hip-hop,/r/hiphopheads
 Hip-hop,/r/hiphopheadsnorthwest
 Hip-hop,/r/hiphop101
+Hip-hop,/r/IndieRap
 Hip-hop,/r/MemphisRap
 Hip-hop,/r/NYrap
 Hip-hop,/r/Rap
@@ -208,6 +211,7 @@ Hip-hop,/r/rhymesandbeats
 Hip-hop,/r/trapmuzik
 Hip-hop,/r/ukhiphopheads
 Hip-hop,/r/undergroundchicago
+Hip-hop,/r/underground_music
 Hip-hop,/r/LofiHipHop
 By Decade,/r/2010smusic
 By Decade,/r/2000smusic
@@ -245,6 +249,7 @@ By country/region/culture,/r/UKbands
 By country/region/culture,/r/ukmusic
 By country/region/culture,/r/WorldMusic
 Other,/r/70s
+Other,/r/alternative
 Other,/r/Acappella
 Other,/r/ambientfolk
 Other,/r/animemusic
@@ -275,6 +280,7 @@ Other,/r/Exotica
 Other,/r/Funk
 Other,/r/FunkSouMusic
 Other,/r/futurefunk
+Other,/r/freebeats
 Other,/r/freejazz
 Other,/r/gamemusic
 Other,/r/GamesMusicMixMash
@@ -291,8 +297,9 @@ Other,/r/japanoise
 Other,/r/jazz
 Other,/r/JazzFusion
 Other,/r/JazzInfluence
-Other,/r/listentoconcerts
 Other,/r/klezmer
+Other,/r/listentoconcerts
+Other,/r/lofi
 Other,/r/MedievalMusic
 Other,/r/MelancholyMusic
 Other,/r/minimalism_music
@@ -346,6 +353,7 @@ Multi-genre,/r/audioinsurrection,"a backdrop for sharing radical music from all 
 Multi-genre,/r/Albums
 Multi-genre,/r/albumlisteners
 Multi-genre,/r/bassheavy
+Multi-genre,/r/Best_Ai_Music
 Multi-genre,/r/BinauralMusic
 Multi-genre,/r/BoyBands
 Multi-genre,/r/Catchysongs
@@ -375,6 +383,7 @@ Multi-genre,/r/HeyThatWasIn
 Multi-genre,/r/HighFidelity
 Multi-genre,/r/ilikethissong
 Multi-genre,/r/indie,"the place to share and discuss indie music"
+Multi-genre,/r/indiemusic
 Multi-genre,/r/IndieWok
 Multi-genre,/r/Indieheads
 Multi-genre,/r/Instrumentals
@@ -413,7 +422,9 @@ Multi-genre,/r/runningmusic
 Multi-genre,/r/ScottishMusic
 Multi-genre,/r/SlavicMusicVideos
 Multi-genre,/r/songwriterscircle,"a critique-based based community for songwriters to develop their musical compositions and analytical skills through participation"
+Multi-genre,/r/SpotifyGems
 Multi-genre,/r/SpotifyMusic,"a place to share Spotify URIs"
+Multi-genre,/r/SunoTubers
 Multi-genre,/r/ThemVoices
 Multi-genre,/r/TodaysFavoriteSong
 Multi-genre,/r/unheardof
@@ -438,9 +449,13 @@ Community,/r/TouringMusicians
 Redditor-made music,/r/AcousticCovers
 Redditor-made music,/r/AcousticOriginals
 Redditor-made music,/r/BedroomBands
+Redditor-made music,/r/beatmakers
+Redditor-made music,/r/bluesguitarist
 Redditor-made music,/r/classicalguitar
 Redditor-made music,/r/Composer
+Redditor-made music,/r/covers
 Redditor-made music,/r/fingerstyleguitar
+Redditor-made music,/r/HearMyMusic
 Redditor-made music,/r/ICoveredASong
 Redditor-made music,/r/independentmusic
 Redditor-made music,/r/MusicCritique
@@ -451,11 +466,13 @@ Redditor-made music,/r/musicmakers
 Redditor-made music,/r/Musicians
 Redditor-made music,/r/MyMusic
 Redditor-made music,/r/piano
+Redditor-made music,/r/pianocovers
 Redditor-made music,/r/promotemusic
 Redditor-made music,/r/PromoteMyMusic
 Redditor-made music,/r/RadioReddit
 Redditor-made music,/r/RoastMyTrack
 Redditor-made music,/r/RateMyPerformance
+Redditor-made music,/r/ratemysong
 Redditor-made music,/r/shareyourmusic
 Redditor-made music,/r/Songwriters
 Redditor-made music,/r/Songwriting
