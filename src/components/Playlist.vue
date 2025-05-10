@@ -1,5 +1,10 @@
 <template>
-  <div class="playlist" :class="{ started: playerQueue.started }">
+  <div
+    class="playlist"
+    :class="{ started: playerQueue.started }"
+    @scroll.passive="handleScroll"
+    ref="playlist"
+  >
     <slot name="header" />
     <ol>
       <li
@@ -52,6 +57,7 @@
 <script>
 import SongTile from "./SongTile.vue";
 import { BIconPlayFill, BIconBoxArrowUpRight } from "bootstrap-vue";
+import { throttle } from "lodash";
 
 export default {
   components: { SongTile, BIconPlayFill, BIconBoxArrowUpRight },
@@ -71,6 +77,21 @@ export default {
       const parsedUrl = new URL(url);
       return `${parsedUrl.protocol}//${parsedUrl.host}/favicon.ico`;
     },
+    handleScroll: throttle(function () {
+      const playlist = this.$refs.playlist;
+      const songElements = Array.from(playlist.querySelectorAll(".song-wrapper"));
+      const firstVisibleSongIndex = songElements.findIndex((song) => {
+        const rect = song.getBoundingClientRect();
+        return rect.top >= 0 && rect.bottom <= window.innerHeight;
+      });
+      const lastVisibleSongIndex = firstVisibleSongIndex + songElements
+        .slice(firstVisibleSongIndex)
+        .findIndex((song) => {
+          const rect = song.getBoundingClientRect();
+          return rect.bottom > window.innerHeight;
+        });
+      this.$emit("visible-songs", firstVisibleSongIndex, lastVisibleSongIndex === -1 ? this.songs.length : lastVisibleSongIndex);
+    }, 1500),
   },
 };
 </script>

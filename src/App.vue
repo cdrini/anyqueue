@@ -65,7 +65,8 @@
         v-else
         :songs="songs"
         :playerQueue="playerQueue"
-        @song-clicked="(index) => playerQueue.playTrackAt(index)"
+        @song-clicked="playTrackAtIndex"
+        @visible-songs="preloadVisibleSongMetadata"
       >
         <template v-slot:header>
           <RedditQueueControls
@@ -77,7 +78,10 @@
       </Playlist>
     </template>
     <template v-slot:toolbar>
-      <PlayToolbar :player-queue="playerQueue" />
+      <PlayToolbar
+        :player-queue="playerQueue"
+        @skip="skipForward(false)"
+      />
     </template>
     <template v-slot:main>
       <!-- YouTube iframe has a bug where it won't auto-play if offscreen when the player is first rendered. -->
@@ -114,7 +118,7 @@
         :url="playerQueue.activeSong.link"
         :warning="humanReadableWarning(playerQueue.activeSong)"
         :autoplay="true"
-        @ended="skipForward(true)"
+        @ended="skipForward(settings.dj_enabled)"
       />
       <div
         v-if="!(playerQueue.started && playerQueue.activeSong)"
@@ -226,25 +230,42 @@ const SONGS = [
 ];
 
 async function processSongs(songs, activeIndex) {
+  songs.forEach((s) => {
+    s.active = false;
+    const provider = SongProviderFactory.findForSong(s);
+    const player = PLAYERS[provider?.name];
+    if (provider && player) {
+      s.provider = provider;
+      s.player = player;
+      s.warnings = s.warnings || [];
+
+      if (s.player.supportsAutoplay === false) {
+        s.warnings.push(`autostart`);
+      }
+
+      if (s.player.supportsEndEvent === false) {
+        s.warnings.push(`end events`);
+      }
+
+      s.link = s.provider.normalizeLink(s.link);
+    }
+  });
+
+  await preloadSongMetadata(songs.slice(0, 20));
+
+  if (activeIndex < songs.length) {
+    songs[activeIndex].active = true;
+  } else if (songs.length) {
+    songs[0].active = true;
+  }
+}
+
+async function preloadSongMetadata(songs) {
   await Promise.all(
-    songs.map(async (s) => {
-      s.active = false;
-      const provider = SongProviderFactory.findForSong(s);
-      const player = PLAYERS[provider?.name];
-      if (provider && player) {
-        s.provider = provider;
-        s.player = player;
-        s.warnings = s.warnings || [];
-
-        if (s.player.supportsAutoplay === false) {
-          s.warnings.push(`autostart`);
-        }
-
-        if (s.player.supportsEndEvent === false) {
-          s.warnings.push(`end events`);
-        }
-
-        s.link = s.provider.normalizeLink(s.link);
+    // augment the first 10 playable songs
+    songs
+      .filter((s) => s.provider)
+      .map(async (s) => {
         try {
           await s.provider.augmentMetadata(s);
         } catch (err) {
@@ -252,15 +273,8 @@ async function processSongs(songs, activeIndex) {
           s.unavailable = true;
           s.warnings.push("An error occurred");
         }
-      }
     })
   );
-
-  if (activeIndex < songs.length) {
-    songs[activeIndex].active = true;
-  } else if (songs.length) {
-    songs[0].active = true;
-  }
 }
 
 export default {
@@ -411,6 +425,15 @@ export default {
   },
 
   methods: {
+    async preloadVisibleSongMetadata(firstSongIndex, lastSongIndex) {
+      return preloadSongMetadata(
+        this.playerQueue.songs.slice(
+          Math.max(0, firstSongIndex - 10),
+          lastSongIndex + 10
+        )
+      );
+    },
+
     async chooseRandomSubreddit() {
       const subreddits = await loadMusicSubreddits();
       const chosen = sample(subreddits);
@@ -597,13 +620,39 @@ export default {
       this.$refs.activeSongPlayer.pause();
     },
 
+    async playTrackAtIndex(index) {
+      await preloadSongMetadata(
+        this.songs.slice(
+          Math.max(0, index - 10),
+          index + 20
+        )
+      );
+
+      this.playerQueue.playTrackAt(index);
+    },
+
     async skipBackward() {
+      await preloadSongMetadata(
+        this.songs.slice(
+          Math.max(0, this.playerQueue.activeSongIndex - 10),
+          this.playerQueue.activeSongIndex + 20
+        )
+      );
+
       if (this.playerQueue.prevSong) {
         this.playerQueue.skipBack();
       }
     },
 
     async skipForward(speakLastSong = false) {
+      const promises = [];
+      promises.push(preloadSongMetadata(
+        this.songs.slice(
+          this.playerQueue.activeSongIndex + 1,
+          this.playerQueue.activeSongIndex + 20
+        )
+      ));
+
       if (speakLastSong) {
         const song = this.playerQueue.activeSong;
         let text = `That was ${song.title || "an unknown song"}`;
@@ -615,8 +664,10 @@ export default {
         text += ".";
         if (song.recommender) text += ` Recommended by ${song.recommender}.`;
         const utterance = new SpeechSynthesisUtterance(text);
-        await speak(utterance, this.selectedVoice, this.settings.dj_rate);
+        promises.push(speak(utterance, this.selectedVoice, this.settings.dj_rate));
       }
+
+      await Promise.all(promises);
 
       if (this.playerQueue.nextSong) {
         this.playerQueue.skip();

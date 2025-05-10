@@ -11,7 +11,7 @@
     </button>
     <button
       class="chunky-button naked-button"
-      @click="playerQueue.skip()"
+      @click="$emit('skip')"
       v-if="playerQueue.started"
     >
       <b-icon-skip-end-fill />
