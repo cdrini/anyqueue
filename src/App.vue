@@ -465,10 +465,11 @@ export default {
         this.openPane = pane;
       }
     },
-    async reloadSongs({ activeSongInfoComponent, songs }) {
+    async reloadSongs({ activeSongInfoComponent, provider = null, songs }) {
       this.activeSongInfoComponent = activeSongInfoComponent;
       this.loadingSongs = true;
       await processSongs(songs, 0);
+      this.queueProvider = provider;
       this.songs = songs.filter((s) => s.provider);
       this.playerQueue.load(this.songs);
       this.loadingSongs = false;
