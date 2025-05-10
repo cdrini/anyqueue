@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import { sample } from "lodash";
+import { sample, uniqBy } from "lodash";
 import jsonUrl from "json-url";
 import Vue from "vue";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
@@ -360,6 +360,7 @@ export default {
       this.queueProvider = provider;
       this.activeSongInfoComponent = activeSongInfoComponent;
       songs = urlSongs;
+      songs = uniqBy(songs, (s) => s.link);
     }
 
     else {
@@ -440,6 +441,7 @@ export default {
       songs = urlSongs;
 
       await processSongs(songs, 0);
+      songs = uniqBy(songs, (s) => s.link);
       this.songs = songs;
       this.playerQueue.load(this.songs, this.songs.findIndex((s) => s.unavailable !== true));
       this.loadingSongs = false;

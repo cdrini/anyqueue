@@ -46,8 +46,13 @@ export class RedditQueueProvider {
     // eg  https://www.reddit.com/r/listentothis/top/?t=all
 
     const urlObj = new URL(url);
-    const subreddit = urlObj.pathname.match(/\/r\/[^/]+/)[0];
-    let sort = urlObj.pathname.split('/')[3];
+    const subredditM = urlObj.pathname.match(/\/r\/[^/]+/);
+    const userFeedM = urlObj.pathname.match(/\/user\/[^/]+\/m\/[^/]+/);
+    let subreddit = subredditM ? subredditM[0] :
+      userFeedM ? `https://www.reddit.com${userFeedM[0]}` :
+      urlObj.toString();
+    let sort = subredditM ? urlObj.pathname.split('/')[3]
+      : userFeedM ? urlObj.pathname.split('/')[5] : null;
     const time = /** @type {'hour' | 'day' | 'week' | 'month' | 'year' | 'all' | null} */(urlObj.searchParams.get('t'));
     if (!sort) {
       sort = 'best';
