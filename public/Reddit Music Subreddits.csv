@@ -246,7 +246,6 @@ By country/region/culture,/r/ukmusic
 By country/region/culture,/r/WorldMusic
 Other,/r/70s
 Other,/r/Acappella
-Other,/r/AcousticCovers
 Other,/r/ambientfolk
 Other,/r/animemusic
 Other,/r/AntiFolk
@@ -302,6 +301,7 @@ Other,/r/MovieMusic
 Other,/r/MusicForConcentration
 Other,/r/muzyka
 Other,/r/NightMusic
+Other,/r/nintendomusic
 Other,/r/NuDisco
 Other,/r/obscuremusic
 Other,/r/oldiemusic
@@ -429,23 +429,30 @@ Community,/r/LubbockMusicians,"current day music scene of Buddy Holly's hometown
 Community,/r/mixcd
 Community,/r/musiccritics
 Community,/r/MusicalComedy
-Community,/r/Musicians
 Community,/r/MusicProduction
 Community,/r/OSOM
 Community,/r/performer
 Community,/r/RecordClub
 Community,/r/recordstore
 Community,/r/TouringMusicians
+Redditor-made music,/r/AcousticCovers
 Redditor-made music,/r/AcousticOriginals
 Redditor-made music,/r/BedroomBands
+Redditor-made music,/r/classicalguitar
 Redditor-made music,/r/Composer
+Redditor-made music,/r/fingerstyleguitar
 Redditor-made music,/r/ICoveredASong
 Redditor-made music,/r/independentmusic
 Redditor-made music,/r/MusicCritique
+Redditor-made music,/r/Music_City
 Redditor-made music,/r/MusicInTheMaking
+Redditor-made music,/r/musicimade
 Redditor-made music,/r/musicmakers
+Redditor-made music,/r/Musicians
 Redditor-made music,/r/MyMusic
 Redditor-made music,/r/piano
+Redditor-made music,/r/promotemusic
+Redditor-made music,/r/PromoteMyMusic
 Redditor-made music,/r/RadioReddit
 Redditor-made music,/r/RoastMyTrack
 Redditor-made music,/r/RateMyPerformance
@@ -455,5 +462,6 @@ Redditor-made music,/r/Songwriting
 Redditor-made music,/r/TheseAreOurAlbums
 Redditor-made music,/r/ThisIsOurMusic
 Redditor-made music,/r/UserProduced
+Redditor-made music,/r/VGCovers
 Redditor-made music,/r/WereOnSpotify
 Redditor-made music,/r/WhiteLabels
