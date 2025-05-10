@@ -88,6 +88,7 @@
         :url="
           playerQueue.started &&
           playerQueue.activeSong &&
+          playerQueue.activeSong.player &&
           playerQueue.activeSong.player.name == 'YouTubePlayer'
             ? playerQueue.activeSong.link
             : ''
@@ -95,6 +96,7 @@
         :active="
           playerQueue.started &&
           playerQueue.activeSong &&
+          playerQueue.activeSong.player &&
           playerQueue.activeSong.player.name == 'YouTubePlayer'
         "
         @ended="skipForward(settings.dj_enabled)"
@@ -103,6 +105,7 @@
         v-if="
           playerQueue.started &&
           playerQueue.activeSong &&
+          playerQueue.activeSong.player &&
           playerQueue.activeSong.player.name != 'YouTubePlayer'
         "
         :is="playerQueue.activeSong.player"
@@ -190,14 +193,14 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
 const PLAYERS = {
-  YouTubeProvider: YouTubePlayer,
-  IAProvider: IAPlayer,
-  SoundCloudProvider: SoundCloudPlayer,
-  SpotifyProvider: SpotifyPlayer,
-  GoogleDriveProvider: GoogleDrivePlayer,
-  AudioMackProvider: AudioMackPlayer,
-  RedditProvider: RedditPlayer,
-  BandCampProvider: BandCampPlayer,
+  "YouTube": YouTubePlayer,
+  "Internet Archive": IAPlayer,
+  "SoundCloud": SoundCloudPlayer,
+  "Spotify": SpotifyPlayer,
+  "Google Drive": GoogleDrivePlayer,
+  "AudioMack": AudioMackPlayer,
+  "Reddit": RedditPlayer,
+  "BandCamp": BandCampPlayer,
 };
 
 const SONGS = [
@@ -227,7 +230,7 @@ async function processSongs(songs, activeIndex) {
     songs.map(async (s) => {
       s.active = false;
       const provider = SongProviderFactory.findForSong(s);
-      const player = PLAYERS[provider?.constructor?.name];
+      const player = PLAYERS[provider?.name];
       if (provider && player) {
         s.provider = provider;
         s.player = player;
@@ -255,7 +258,7 @@ async function processSongs(songs, activeIndex) {
 
   if (activeIndex < songs.length) {
     songs[activeIndex].active = true;
-  } else {
+  } else if (songs.length) {
     songs[0].active = true;
   }
 }
@@ -359,7 +362,7 @@ export default {
       songs = urlSongs;
     }
 
-    if (!songs?.length) {
+    else {
       songs =
         shareObj.songs ||
         (localStorage["App::songs"] &&
