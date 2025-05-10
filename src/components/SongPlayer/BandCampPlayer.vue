@@ -54,19 +54,19 @@ export default {
 </script>
 
 <style>
-.song-player {
+.band-camp-player {
   display: flex;
   flex-direction: column;
 }
 
 @media (max-width: 600px) {
-  .song-player iframe {
+  .band-camp-player iframe {
     height: 80px;
   }
 }
 
 @media (min-width: 600px) {
-  .song-player iframe {
+  .band-camp-player iframe {
     flex: 1;
   }
 }
