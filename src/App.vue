@@ -45,6 +45,7 @@
         v-if="openSidebar == 'explore'"
         :active-subreddit="queueProvider && queueProvider.name == 'reddit' && queueProvider.subreddit"
         @subreddit-selected="handleUrlChange"
+        style="flex: 1; overflow-y: auto;"
       >
         <template v-slot:footer>
           <RedditQueueControls
@@ -56,7 +57,7 @@
       </TagExplorer>
 
       <div v-else-if="loadingSongs" style="flex: 1; display: flex; align-items: center; justify-content: center;">
-        <LoadingIcon style="width: 48px; height: 48px;" />
+        <LoadingIcon style="width: 128px; height: 128px;" />
       </div>
 
       <Playlist

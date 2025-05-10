@@ -151,9 +151,6 @@ export default {
 </script>
 
 <style>
-.tag-explorer {
-  overflow-y: auto;
-}
 .tag-explorer h3 {
   font-size: 12px;
   position: sticky;
