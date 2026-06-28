@@ -35,7 +35,10 @@ export default {
 
   watch: {
     async videoId(newId) {
-      if (!newId) return;
+      if (!newId) {
+        this.player?.stopVideo();
+        return;
+      }
       if (this.player) {
         this.player.loadVideoById(newId);
       } else {
