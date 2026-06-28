@@ -4,7 +4,7 @@
     <header>
       <a class="reddit-header__title naked-button" :href="queueProvider.fullUrl" target="_blank">
         {{ queueProvider.subreddit }}
-        <b-icon-box-arrow-up-right />
+        <BootstrapIcon name="box-arrow-up-right" />
       </a>
     </header>
 
@@ -38,12 +38,12 @@
 </template>
 
 <script>
-import { BIconBoxArrowUpRight } from "bootstrap-vue";
+import BootstrapIcon from "../BootstrapIcon.vue";
 /** @typedef {import('@/src/models/QueueProviders/RedditQueueProvider.js').RedditQueueProvider} */
 
 export default {
   name: "RedditQueueControls",
-  components: { BIconBoxArrowUpRight },
+  components: { BootstrapIcon },
   props: {
     /** @type {RedditQueueProvider} */
     queueProvider: Object,

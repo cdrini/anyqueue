@@ -3,7 +3,7 @@
     <header>
       <h2>Settings</h2>
       <button class="naked-button" @click="$emit('close')">
-        <b-icon-x-lg />
+        <BootstrapIcon name="x-lg" />
       </button>
     </header>
     <label>
@@ -51,7 +51,7 @@
         :class="{ active: speaking }"
         style="grid-area: 1 / 2"
       >
-        <b-icon-play-fill />
+        <BootstrapIcon name="play-fill" />
         Preview
       </button>
     </label>
@@ -90,6 +90,7 @@
 </template>
   
 <script>
+import BootstrapIcon from "../BootstrapIcon.vue";
 import { speak } from "../../utils/speech.js";
 
 /**
@@ -108,6 +109,7 @@ function groupVoicesByLanguage(voices) {
 
 export default {
   name: "SettingsPane",
+  components: { BootstrapIcon },
   props: {
     /** @type {import('./models/Settings.js').Settings} */
     settings: { type: Object },

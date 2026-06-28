@@ -3,7 +3,7 @@
     <header>
       <h2>Import Songs (alpha)</h2>
       <button class="naked-button" @click="$emit('close')">
-        <b-icon-x-lg />
+        <BootstrapIcon name="x-lg" />
       </button>
     </header>
     <form @submit.prevent="processImport">
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import BootstrapIcon from "./BootstrapIcon.vue";
 import { csvParse } from "d3-dsv";
 import { extractSongsFromHtml } from "../models/QueueProviders/HTMLQueueProvider.js";
 // Queue Providers
@@ -109,6 +110,7 @@ export const importers = {
 
 export default {
   name: "ImportPane",
+  components: { BootstrapIcon },
   props: {},
   data() {
     return {

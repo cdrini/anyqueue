@@ -13,10 +13,10 @@
         <div style="flex: 1" />
         <div>
           <button class="naked-button" title="Import... (alpha)" @click="togglePane('import')" :class="{ active: openPane == 'import' }">
-            <b-icon-plus-square />
+            <BootstrapIcon name="plus-square" />
           </button>
           <button class="naked-button" title="Settings" @click="togglePane('settings')" :class="{ active: openPane == 'settings' }">
-            <b-icon-gear-fill />
+            <BootstrapIcon name="gear-fill" />
           </button>
         </div>
       </div>
@@ -152,11 +152,8 @@
 <script>
 import { sample, uniqBy } from "lodash";
 import jsonUrl from "json-url";
-import Vue from "vue";
-import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
-// Import Bootstrap an BootstrapVue CSS files (order is important)
 import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 import { PlayerQueue } from "./models/PlayerQueue";
 import Playlist from "./components/Playlist";
@@ -186,15 +183,11 @@ import SettingsPane from "./components/Settings/SettingsPane.vue";
 import TagExplorer from "./components/TagExplorer.vue";
 import DiceIcon from "./components/icons/DiceIcon.vue";
 import LoadingIcon from "./components/icons/LoadingIcon.vue";
+import BootstrapIcon from "./components/BootstrapIcon.vue";
 
 // Types
 /** @typedef {import('@/src/models/Types.ts').QueueProvider} QueueProvider */
 /** @typedef {import('@/src/models/Types.ts').Song} Song */
-
-// Make BootstrapVue available throughout your project
-Vue.use(BootstrapVue);
-// Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin);
 
 const PLAYERS = {
   "YouTube": YouTubePlayer,
@@ -280,6 +273,7 @@ async function preloadSongMetadata(songs) {
 export default {
   name: "App",
   components: {
+    BootstrapIcon,
     DiceIcon,
     ImportPane,
     LoadingIcon,
@@ -794,9 +788,9 @@ body {
   padding: 0 8px;
 }
 
-.chunky-button > .b-icon {
-  width: 25px;
-  height: 25px;
+.chunky-button > .bi {
+  font-size: 25px;
+  line-height: 0;
 }
 
 .song-player .alert {

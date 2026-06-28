@@ -17,7 +17,7 @@
           <SongTile :song="song" style="flex: 1" />
           <div class="song-listing__actions">
             <button class="chunky-button naked-button song-listing__play">
-              <b-icon-play-fill />
+              <BootstrapIcon name="play-fill" />
               <span class="chunky-button__label">Play</span>
             </button>
             <a
@@ -27,7 +27,7 @@
               @click.stop
             >
               <div>
-                <b-icon-box-arrow-up-right />
+                <BootstrapIcon name="box-arrow-up-right" />
                 <img class="song-listing__favicon" :src="song.provider?.iconUrl || getFavIcon(song.link)" />
               </div>
               <span class="chunky-button__label">View</span>
@@ -41,7 +41,7 @@
               @click.stop
             >
               <div>
-                <b-icon-box-arrow-up-right />
+                <BootstrapIcon name="box-arrow-up-right" />
                 <img class="song-listing__favicon" :src="getFavIcon(link)" />
               </div>
               <span class="chunky-button__label">View</span>
@@ -56,11 +56,11 @@
 
 <script>
 import SongTile from "./SongTile.vue";
-import { BIconPlayFill, BIconBoxArrowUpRight } from "bootstrap-vue";
+import BootstrapIcon from "./BootstrapIcon.vue";
 import { throttle } from "lodash";
 
 export default {
-  components: { SongTile, BIconPlayFill, BIconBoxArrowUpRight },
+  components: { SongTile, BootstrapIcon },
   props: {
     songs: {
       type: Array,
@@ -138,9 +138,9 @@ li.song-wrapper.active {
   position: relative;
 }
 
-.song-listing__view .b-icon {
-  width: 14px;
-  height: 25px;
+.song-listing__view .bi {
+  font-size: 14px;
+  display: inline-block;
 }
 
 .song-listing__actions {
@@ -203,15 +203,15 @@ li.song-wrapper.active {
   transform: translateY(6px);
 }
 
-.song-wrapper:hover .song-listing__view .b-icon,
-.song-wrapper.active .song-listing__view .b-icon {
+.song-wrapper:hover .song-listing__view .bi,
+.song-wrapper.active .song-listing__view .bi {
   transform: translateY(0);
   transition-property: opacity, transform;
   transition-duration: 0.2s;
 }
 
-.song-wrapper:hover .song-listing__view .b-icon,
-.song-wrapper.active .song-listing__view .b-icon {
+.song-wrapper:hover .song-listing__view .bi,
+.song-wrapper.active .song-listing__view .bi {
   opacity: 0;
   transform: translateY(-8px);
 }

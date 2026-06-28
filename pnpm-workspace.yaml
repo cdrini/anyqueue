@@ -1,3 +1,5 @@
 allowBuilds:
   bootstrap-vue: true
   core-js: true
+  phantomjs-prebuilt: false
+  yorkie: false

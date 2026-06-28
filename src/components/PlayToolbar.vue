@@ -6,7 +6,7 @@
       @click="playerQueue.start()"
       v-if="!playerQueue.started"
     >
-      <b-icon-play-fill />
+      <BootstrapIcon name="play-fill" />
       Start
     </button>
     <button
@@ -14,7 +14,7 @@
       @click="$emit('skip')"
       v-if="playerQueue.started"
     >
-      <b-icon-skip-end-fill />
+      <BootstrapIcon name="skip-end-fill" />
       Skip
     </button>
   </div>
@@ -22,10 +22,10 @@
 
 <script>
 import SongTile from "./SongTile.vue";
-import { BIconPlayFill, BIconSkipEndFill } from "bootstrap-vue";
+import BootstrapIcon from "./BootstrapIcon.vue";
 
 export default {
-  components: { SongTile, BIconPlayFill, BIconSkipEndFill },
+  components: { SongTile, BootstrapIcon },
   props: {
     /** @type {import('../models/PlayerQueue').PlayerQueue} */
     playerQueue: Object,

@@ -2,12 +2,14 @@
   <div class="song-tile">
     <div class="song-tile__thumb" v-b-popover.hover.v-warning="warningsHover">
       <img v-if="song.thumbnail_url" :src="song.thumbnail_url" />
-      <b-icon-x-square
+      <BootstrapIcon
+        name="x-square"
         class="song-tile__unavailable"
         v-if="song.unavailable"
         @click.stop
       />
-      <b-icon-exclamation-square
+      <BootstrapIcon
+        name="exclamation-square"
         class="song-tile__warning"
         v-else-if="song.warnings && song.warnings.length"
         @click.stop
@@ -31,9 +33,9 @@
 </template>
 
 <script>
-import { BIconExclamationSquare, BIconXSquare } from "bootstrap-vue";
+import BootstrapIcon from "./BootstrapIcon.vue";
 export default {
-  components: { BIconExclamationSquare, BIconXSquare },
+  components: { BootstrapIcon },
   props: {
     song: Object,
   },
