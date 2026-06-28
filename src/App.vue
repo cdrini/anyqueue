@@ -156,16 +156,16 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import { PlayerQueue } from "./models/PlayerQueue";
-import Playlist from "./components/Playlist";
-import PlayToolbar from "./components/PlayToolbar";
-import PlayerShell from "./components/PlayerShell";
+import Playlist from "./components/Playlist.vue";
+import PlayToolbar from "./components/PlayToolbar.vue";
+import PlayerShell from "./components/PlayerShell.vue";
 
 // Players
-import YouTubePlayer from "./components/SongPlayer/YouTubePlayer";
-import IAPlayer from "./components/SongPlayer/IAPlayer";
-import SoundCloudPlayer from "./components/SongPlayer/SoundCloudPlayer";
-import GoogleDrivePlayer from "./components/SongPlayer/GoogleDrivePlayer";
-import AudioMackPlayer from "./components/SongPlayer/AudioMackPlayer";
+import YouTubePlayer from "./components/SongPlayer/YouTubePlayer.vue";
+import IAPlayer from "./components/SongPlayer/IAPlayer.vue";
+import SoundCloudPlayer from "./components/SongPlayer/SoundCloudPlayer.vue";
+import GoogleDrivePlayer from "./components/SongPlayer/GoogleDrivePlayer.vue";
+import AudioMackPlayer from "./components/SongPlayer/AudioMackPlayer.vue";
 import SpotifyPlayer from "./components/SongPlayer/SpotifyPlayer.vue";
 import RedditPlayer from "./components/SongPlayer/RedditPlayer.vue";
 import BandCampPlayer from "./components/SongPlayer/BandCampPlayer.vue";
