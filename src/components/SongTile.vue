@@ -1,6 +1,6 @@
 <template>
   <div class="song-tile">
-    <div class="song-tile__thumb" v-b-popover.hover.v-warning="warningsHover">
+    <div class="song-tile__thumb" :title="warningsHover">
       <img v-if="song.thumbnail_url" :src="song.thumbnail_url" />
       <BootstrapIcon
         name="x-square"
