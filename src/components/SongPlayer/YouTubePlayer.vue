@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import { getIdFromUrl } from "vue-youtube";
 import Vue from "vue";
 import VueYoutube from "vue-youtube";
+import { getIdFromUrl } from "@/utils/utils.js";
 
 Vue.use(VueYoutube);
 export default {
@@ -35,7 +35,7 @@ export default {
 
   computed: {
     videoId() {
-      return getIdFromUrl(this.url);
+      return this.url && getIdFromUrl(this.url);
     },
   },
 

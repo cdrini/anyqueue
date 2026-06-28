@@ -1,5 +1,5 @@
 import { SongProvider } from "../SongProvider.js";
-import { getIdFromUrl } from "vue-youtube";
+import { getIdFromUrl } from "../../utils/utils.js";
 
 export class YouTubeProvider extends SongProvider {
   constructor() {
