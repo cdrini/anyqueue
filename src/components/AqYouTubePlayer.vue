@@ -69,7 +69,7 @@ export default {
     },
   },
 
-  destroyed() {
+  unmounted() {
     this.player?.destroy();
   },
 };

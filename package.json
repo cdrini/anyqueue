@@ -17,17 +17,17 @@
     "lodash": "4.17.21",
     "player.js": "0.1.0",
     "video.js": "^7.15.4",
-    "vue": "^2.7.16",
-    "vue-async-computed": "3.9.0"
+    "vue": "^3.5.39",
+    "vue-async-computed": "^4.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.1",
     "@vue/cli-plugin-eslint": "^5.0.8",
     "@vue/cli-service": "^5.0.8",
+    "@vue/compiler-sfc": "^3.5.0",
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.21.1",
-    "icon-gen": "^2.1.0",
-    "vue-template-compiler": "^2.7.16"
+    "icon-gen": "^2.1.0"
   },
   "eslintConfig": {
     "root": true,
@@ -35,7 +35,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
     "rules": {

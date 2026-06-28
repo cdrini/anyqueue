@@ -1,5 +1,5 @@
 <template>
-  <div class="tag-explorer">
+  <div ref="el" class="tag-explorer">
     <div v-if="loading" style="text-align: center; padding: 20px;">
       <LoadingIcon style="width: 48px; height: 48px;" />
     </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { nextTick } from "vue";
 import { sample, sortBy, uniqBy } from "lodash";
 import DiceIcon from "./icons/DiceIcon.vue";
 import LoadingIcon from "./icons/LoadingIcon.vue";
@@ -105,8 +106,8 @@ export default {
     async activeSubreddit(newValue) {
       if (!newValue) return;
 
-      await this.$nextTick();
-      this.$el.querySelector("a.active")?.scrollIntoView({
+      await nextTick();
+      this.$refs.el.querySelector("a.active")?.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
@@ -140,8 +141,8 @@ export default {
     this.loading = false;
 
     if (this.activeSubreddit) {
-      await this.$nextTick();
-      this.$el.querySelector("a.active")?.scrollIntoView({
+      await nextTick();
+      this.$refs.el.querySelector("a.active")?.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });

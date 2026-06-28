@@ -19,14 +19,11 @@
 </template>
 
 <script>
-import Vue from "vue";
-import AsyncComputed from "vue-async-computed";
 import { IAProvider } from "../../models/SongProviders/IAProvider.js";
 import AqAlert from "../AqAlert.vue";
 
 const IA_PROVIDER = new IAProvider();
 
-Vue.use(AsyncComputed);
 export default {
   name: "IAPlayer",
   components: { AqAlert },
@@ -79,7 +76,7 @@ export default {
     },
   },
 
-  destroyed() {
+  unmounted() {
     clearTimeout(this.endTimeout);
   },
 

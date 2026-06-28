@@ -69,7 +69,7 @@ export default {
     window.addEventListener("blur", this.onWindowBlur);
   },
 
-  destroyed() {
+  unmounted() {
     window.removeEventListener("blur", this.onWindowBlur);
   },
 };

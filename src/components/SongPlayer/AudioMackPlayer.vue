@@ -48,7 +48,7 @@ export default {
     });
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     // This errors if done on destroy, becuase the iframe
     // has been removed.
     if (this.player) {

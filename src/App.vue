@@ -1,5 +1,5 @@
 <template>
-  <PlayerShell id="app">
+  <PlayerShell>
     <template v-slot:menus>
       <div class="app-bar">
         <img src="@/assets/favicon.svg" class="app-bar__logo" />
@@ -673,6 +673,7 @@ export default {
 
 <style>
 #app {
+  height: 100%;
   font-family: "Bahnschrift", -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji";

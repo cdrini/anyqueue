@@ -34,7 +34,7 @@ export default {
       this.player.on("ended", () => this.$emit("ended"));
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.player) {
       this.player.dispose();
     }

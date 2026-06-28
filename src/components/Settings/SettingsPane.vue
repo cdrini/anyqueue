@@ -185,7 +185,7 @@ export default {
     window.speechSynthesis.addEventListener("voiceschanged", this.updateVoices);
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     window.speechSynthesis.removeEventListener(
       "voiceschanged",
       this.updateVoices
