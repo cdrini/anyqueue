@@ -28,7 +28,7 @@
             >
               <div>
                 <BootstrapIcon name="box-arrow-up-right" />
-                <img class="song-listing__favicon" :src="song.provider?.iconUrl || getFavIcon(song.link)" />
+                <img class="song-listing__favicon" :src="song.provider?.iconUrl || (song.link && getFavIcon(song.link))" />
               </div>
               <span class="chunky-button__label">View</span>
             </a>

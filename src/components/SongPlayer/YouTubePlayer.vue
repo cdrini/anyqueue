@@ -1,24 +1,23 @@
 <template>
   <div class="song-player youtube-provider" v-show="active">
-    <youtube
+    <AqYouTubePlayer
       class="youtube-player"
       ref="youtube"
       :video-id="videoId"
       :player-vars="{ autoplay: autoplay ? 1 : 0 }"
       @ended="$emit('ended', $event)"
       @ready="onReady"
-    ></youtube>
+    />
   </div>
 </template>
 
 <script>
-import Vue from "vue";
-import VueYoutube from "vue-youtube";
 import { getIdFromUrl } from "@/utils/utils.js";
+import AqYouTubePlayer from "../AqYouTubePlayer.vue";
 
-Vue.use(VueYoutube);
 export default {
   name: "YouTubePlayer",
+  components: { AqYouTubePlayer },
   props: {
     url: {
       type: String,

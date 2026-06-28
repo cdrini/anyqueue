@@ -38,9 +38,6 @@ importers:
       vue-async-computed:
         specifier: 3.9.0
         version: 3.9.0(vue@2.7.16)
-      vue-youtube:
-        specifier: 1.4.0
-        version: 1.4.0(vue@2.7.16)
     devDependencies:
       '@babel/eslint-parser':
         specifier: ^7.25.1
@@ -2272,9 +2269,6 @@ packages:
     resolution: {integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==}
     engines: {node: '>=10'}
 
-  get-youtube-id@1.0.1:
-    resolution: {integrity: sha512-5yidLzoLXbtw82a/Wb7LrajkGn29BM6JuLWeHyNfzOGp1weGyW4+7eMz6cP23+etqj27VlOFtq8fFFDMLq/FXQ==}
-
   getpass@0.1.7:
     resolution: {integrity: sha512-0fzj9JxOLfJ+XGLhR8ze3unN0KZCgZwiSSDz168VERjK8Wl8kVSdcu2kspd4s4wtAa1y/qrVRiAA0WclVsu0ng==}
 
@@ -2739,9 +2733,6 @@ packages:
   load-json-file@1.1.0:
     resolution: {integrity: sha512-cy7ZdNRXdablkXYNI049pthVeXFurRyb9+hA/dZzerZ0pGTx42z+y+ssxBaVV2l70t1muq5IdKhn4UtcoGUY9A==}
     engines: {node: '>=0.10.0'}
-
-  load-script@1.0.0:
-    resolution: {integrity: sha512-kPEjMFtZvwL9TaZo0uZ2ml+Ye9HUMmPwbYRJ324qF9tqMejwykJ5ggTyvzmrbBeapCAbk98BSbTeovHEEP1uCA==}
 
   loader-runner@4.3.0:
     resolution: {integrity: sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==}
@@ -3733,9 +3724,6 @@ packages:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
     engines: {node: '>= 10'}
 
-  sister@3.0.2:
-    resolution: {integrity: sha512-p19rtTs+NksBRKW9qn0UhZ8/TUI9BPw9lmtHny+Y3TinWlOa9jWh9xB0AtPSdmOy49NJJJSSe0Ey4C7h0TrcYA==}
-
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -4119,11 +4107,6 @@ packages:
   vue-template-es2015-compiler@1.9.1:
     resolution: {integrity: sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==}
 
-  vue-youtube@1.4.0:
-    resolution: {integrity: sha512-PCyfGAouSt6rTX0GLUzpdX2XC52zYf7a9mUhdp53jeDlPoU40hpsvyV3Zg2+947pvbv27ORcmtzm2fqO08kh9Q==}
-    peerDependencies:
-      vue: ^2.3.0
-
   vue@2.7.16:
     resolution: {integrity: sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==}
     deprecated: Vue 2 has reached EOL and is no longer actively maintained. See https://v2.vuejs.org/eol/ for more details.
@@ -4311,9 +4294,6 @@ packages:
   yorkie@2.0.0:
     resolution: {integrity: sha512-jcKpkthap6x63MB4TxwCyuIGkV0oYP/YRyuQU5UO0Yz/E/ZAu+653/uov+phdmO54n6BcvFRyyt0RRrWdN2mpw==}
     engines: {node: '>=4'}
-
-  youtube-player@5.6.0:
-    resolution: {integrity: sha512-x95fBbxV7eZ1ZsFtMLMcSGX0Jb/GPPj69RsooyEDVa9bzvvNZ4d5VjnBVBYoY85008VefkLvtaV+b+l38R/LMQ==}
 
 snapshots:
 
@@ -6980,8 +6960,6 @@ snapshots:
 
   get-stream@6.0.1: {}
 
-  get-youtube-id@1.0.1: {}
-
   getpass@0.1.7:
     dependencies:
       assert-plus: 1.0.0
@@ -7417,8 +7395,6 @@ snapshots:
       pify: 2.3.0
       pinkie-promise: 2.0.1
       strip-bom: 2.0.0
-
-  load-script@1.0.0: {}
 
   loader-runner@4.3.0: {}
 
@@ -8413,8 +8389,6 @@ snapshots:
       mrmime: 2.0.0
       totalist: 3.0.1
 
-  sister@3.0.2: {}
-
   slash@3.0.0: {}
 
   sockjs@0.3.24:
@@ -8848,14 +8822,6 @@ snapshots:
 
   vue-template-es2015-compiler@1.9.1: {}
 
-  vue-youtube@1.4.0(vue@2.7.16):
-    dependencies:
-      get-youtube-id: 1.0.1
-      vue: 2.7.16
-      youtube-player: 5.6.0
-    transitivePeerDependencies:
-      - supports-color
-
   vue@2.7.16:
     dependencies:
       '@vue/compiler-sfc': 2.7.16
@@ -9098,11 +9064,3 @@ snapshots:
       is-ci: 1.2.1
       normalize-path: 1.0.0
       strip-indent: 2.0.0
-
-  youtube-player@5.6.0:
-    dependencies:
-      debug: 4.3.6
-      load-script: 1.0.0
-      sister: 3.0.2
-    transitivePeerDependencies:
-      - supports-color

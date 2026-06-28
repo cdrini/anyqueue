@@ -18,8 +18,7 @@
     "player.js": "0.1.0",
     "video.js": "^7.15.4",
     "vue": "^2.7.16",
-    "vue-async-computed": "3.9.0",
-    "vue-youtube": "1.4.0"
+    "vue-async-computed": "3.9.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.1",
