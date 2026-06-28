@@ -59,5 +59,6 @@
     "not ie <= 8"
   ],
   "keywords": [],
-  "description": ""
+  "description": "",
+  "packageManager": "pnpm@11.6.0"
 }
