@@ -1,9 +1,9 @@
 <template>
   <div class="song-player internet-archive-player">
-    <b-alert show variant="warning">
+    <aq-alert variant="warning">
       IA doesn't post messages from its iframe, so we're relying on the length
       of the audio. If you pause/etc, it will likely behave incorrectly
-    </b-alert>
+    </aq-alert>
     <details>
       <summary>Details</summary>
       <pre>{{ file }}</pre>
@@ -22,14 +22,14 @@
 import Vue from "vue";
 import AsyncComputed from "vue-async-computed";
 import { IAProvider } from "../../models/SongProviders/IAProvider.js";
-import { BAlert } from "bootstrap-vue";
+import AqAlert from "../AqAlert.vue";
 
 const IA_PROVIDER = new IAProvider();
 
 Vue.use(AsyncComputed);
 export default {
   name: "IAPlayer",
-  components: { BAlert },
+  components: { AqAlert },
   props: {
     url: {
       type: String,

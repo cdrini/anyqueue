@@ -1,8 +1,8 @@
 <template>
   <div class="song-player band-camp-player">
-    <b-alert show variant="warning" v-if="warning">
+    <aq-alert variant="warning" v-if="warning">
       {{ warning }}
-    </b-alert>
+    </aq-alert>
     <iframe
       :src="embedUrl"
       ref="iframe"
@@ -16,7 +16,9 @@
 </template>
 
 <script>
+import AqAlert from "../AqAlert.vue";
 export default {
+  components: { AqAlert },
   supportsAutoplay: false,
   supportsEndEvent: false,
 
